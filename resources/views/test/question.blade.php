@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card">
-                <div class="card-body p-4 p-md-5">
+                <div class="card-body p-3 p-md-5">
                     {{-- Progreso --}}
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-2">
