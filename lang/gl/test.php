@@ -1,29 +1,36 @@
 <?php
 
 return [
-    // General
+    // Xerais
     'title' => 'Test de Afinidade Política',
     'subtitle' => 'Descobre que partido político se aliña máis coas túas ideas',
+    'start_test' => 'Comezar Test',
+    'restart' => 'Repetir Test',
+    'home' => 'Inicio',
 
     // Index
     'questions' => 'preguntas',
+    'total_questions' => 'preguntas',
     'minutes' => 'minutos',
+    'estimated_time' => 'minutos aprox.',
     'parties' => 'partidos',
-    'start_test' => 'Comezar Test',
+    'parties_analyzed' => 'Partidos analizados',
     'can_skip' => 'Podes saltar as preguntas que non saibas responder',
     'categories_evaluated' => 'Categorías que avaliaremos',
-    'parties_analyzed' => 'Partidos analizados',
     'anonymous' => 'A túa resposta é 100% anónima. Non gardamos datos persoais.',
     'how_it_works' => 'Como funciona?',
     'step_1' => 'Responde ás preguntas segundo a túa opinión persoal',
     'step_2' => 'Podes saltar as que non saibas ou non che interesen',
     'step_3' => 'Obtén o teu resultado con afinidade por partido e categoría',
 
-    // Questions
+    // Preguntas
     'question' => 'Pregunta',
     'of' => 'de',
+    'category' => 'Categoría',
     'what_means' => 'Que significa isto?',
+    'why_this_matters' => 'Por que importa?',
     'still_not_clear' => 'Aínda non o entendo?',
+    'simple_explanation' => 'Explicación sinxela',
     'strongly_disagree' => 'Moi en desacordo',
     'disagree' => 'En desacordo',
     'neutral' => 'Neutral',
@@ -32,40 +39,25 @@ return [
     'skip_question' => 'Non sei / Pasar',
     'previous' => 'Anterior',
     'next' => 'Seguinte',
+    'finish' => 'Finalizar',
     'see_results' => 'Ver resultados',
     'answered' => 'respondidas',
     'keyboard_hint' => 'Usa as teclas 1-5 para responder, 0 ou S para saltar',
 
-    // Results
+    // Resultados
     'results_title' => 'Os teus Resultados',
     'your_top_party' => 'A túa maior afinidade é con',
     'affinity' => 'de afinidade',
     'based_on' => 'Baseado en',
     'questions_answered' => 'preguntas respondidas',
-    'all_parties' => 'Todos os partidos',
+    'all_parties' => 'Afinidade con todos os partidos',
     'click_for_details' => 'Clic para ver detalles',
-    'you_agree_on' => 'Coincides en...',
-    'you_disagree_on' => 'Diverxes en...',
-    'no_strong_matches' => 'Non hai coincidencias destacadas',
-    'no_strong_divergences' => 'Non hai diverxencias destacadas',
+    'you_agree_on' => 'Coincides en',
+    'you_disagree_on' => 'Diverxes en',
+    'no_strong_matches' => 'Sen coincidencias destacadas',
+    'no_strong_divergences' => 'Sen diverxencias destacadas',
     'results_by_category' => 'Resultados por categoría',
-    'category' => 'Categoría',
-    'restart' => 'Repetir test',
-    'share' => 'Compartir',
-    'download' => 'Descargar',
     'results_disclaimer' => 'Este test é orientativo e non constitúe asesoramento político. Os resultados baséanse nos programas electorais de 2023.',
-
-    // Share
-    'share_results' => 'Compartir resultados',
-    'share_text' => 'Comparte o teu resultado nas redes sociais',
-    'copy_link' => 'Copiar ligazón',
-    'link_copied' => 'Ligazón copiada ao portapapeis!',
-
-    // Modes (legacy)
-    'choose_mode' => 'Elixe o modo',
-    'mode_quick' => 'Rápido',
-    'mode_normal' => 'Normal',
-    'mode_complete' => 'Completo',
 
     // Brúxula política
     'your_political_compass' => 'A túa Brúxula Política',
@@ -77,10 +69,47 @@ return [
     'economic' => 'Económico',
     'social' => 'Social',
 
+    // Radar
+    'your_profile_by_category' => 'O teu perfil por categorías',
+    'your_position' => 'A túa posición',
+
     // Compartir
+    'share' => 'Compartir',
     'share_your_results' => 'Comparte os teus resultados',
     'copy' => 'Copiar',
     'copied' => 'Copiado!',
-    'share_text_twitter' => '🗳️ Fixen o Test de Afinidade Política e a miña maior afinidade é con :party (:percent%). Descubre o teu!',
-    'share_text_whatsapp' => '🗳️ Fixen o Test de Afinidade Política e a miña maior afinidade é con :party (:percent%). Descubre o teu! :url',
+    'copy_link' => 'Copiar ligazón',
+    'link_copied' => 'Ligazón copiada ao portapapeis!',
+    'share_results' => 'Compartir resultados',
+    'share_text' => 'Comparte o teu resultado nas redes sociais',
+    'share_text_twitter' => '🗳️ Fixen o Test de Afinidade Política e a miña maior afinidade é con :party (:percent%). Descobre o teu!',
+    'share_text_whatsapp' => '🗳️ Fixen o Test de Afinidade Política e a miña maior afinidade é con :party (:percent%). Descobre o teu! :url',
+    'download' => 'Descargar',
+
+    // Comparador
+    'compare' => 'Comparar',
+    'compare_results' => 'Comparar Resultados',
+    'compare_with_friend' => 'Compara cun amigo',
+    'compare_hint' => 'Pídelle ao teu amigo o seu código de resultados',
+    'friend_code' => 'Código do amigo',
+    'compare_intro' => 'Sodes politicamente compatibles?',
+    'compare_intro_desc' => 'Introduce o código de resultados do teu amigo para comparar as vosas posicións políticas.',
+    'your_code' => 'O teu código',
+    'code' => 'Código',
+    'person' => 'Persoa',
+    'compass_comparison' => 'Comparación de brúxulas',
+    'compass_compatibility' => 'Compatibilidade brúxula',
+    'category_compatibility' => 'Compatibilidade categorías',
+    'compatibility_by_category' => 'Compatibilidade por categoría',
+    'share_comparison' => 'Comparte esta comparación',
+    'back_to_results' => 'Volver aos meus resultados',
+
+    // Modos (legacy)
+    'choose_mode' => 'Elixe o modo',
+    'mode_quick' => 'Rápido',
+    'mode_normal' => 'Normal',
+    'mode_complete' => 'Completo',
+
+    // Open Graph
+    'og_description' => 'Descobre que partido político se aliña máis coas túas ideas. Test gratuíto e anónimo.',
 ];

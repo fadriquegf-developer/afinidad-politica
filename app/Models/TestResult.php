@@ -16,15 +16,16 @@ class TestResult extends Model
         'user_agent',
         'results',
         'compass_position',
+        'category_scores', 
         'top_party_id',
         'is_completed',
         'completed_at',
-        'region',
     ];
 
     protected $casts = [
         'results' => 'array',
         'compass_position' => 'array',
+        'category_scores' => 'array',
         'is_completed' => 'boolean',
         'completed_at' => 'datetime',
     ];

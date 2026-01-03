@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', __('test.title'))</title>
+    {{-- AÑADIR ESTO: Open Graph Meta Tags --}}
+    @hasSection('og_meta')
+        @yield('og_meta')
+    @else
+        <meta property="og:title" content="{{ config('app.name') }}">
+        <meta property="og:description" content="Descubre qué partido político se alinea más con tus ideas.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="{{ asset('images/og-test-politico.png') }}">
+        <meta name="twitter:card" content="summary_large_image">
+    @endif
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>

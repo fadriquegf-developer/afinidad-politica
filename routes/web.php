@@ -13,6 +13,10 @@ Route::post('/restart', [TestController::class, 'restart'])->name('test.restart'
 // URL compartible de resultados (pública)
 Route::get('/r/{shareId}', [TestController::class, 'shared'])->name('test.shared');
 
+// Comparador de resultados
+Route::get('/comparar/{shareId1}/{shareId2?}', [TestController::class, 'compare'])->name('test.compare');
+
+// Cambio de idioma
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['es', 'ca', 'eu', 'gl'])) {
         session(['locale' => $locale]);

@@ -134,7 +134,6 @@ class TestController extends Controller
 
         $testResult = TestResult::findOrFail($testId);
 
-        // Si ya está completado, redirigir a la URL compartible
         if ($testResult->is_completed && $testResult->share_id) {
             return redirect()->route('test.shared', $testResult->share_id);
         }
@@ -145,22 +144,19 @@ class TestController extends Controller
             return redirect()->route('test.index');
         }
 
-        // Calcular resultados
         $resultsData = $this->calculateResults($answers);
-
-        // Calcular posición en brújula política
         $compassPosition = $this->calculateCompassPosition($answers);
+        $categoryScores = $this->calculateCategoryScores($answers);
 
-        // Guardar resultados
         $testResult->update([
             'results' => $resultsData['results'],
             'compass_position' => $compassPosition,
+            'category_scores' => $categoryScores,
             'top_party_id' => $resultsData['topPartyId'],
             'is_completed' => true,
             'completed_at' => now(),
         ]);
 
-        // Redirigir a URL compartible
         return redirect()->route('test.shared', $testResult->share_id);
     }
 
@@ -181,19 +177,31 @@ class TestController extends Controller
             ? $testResult->compass_position
             : json_decode($testResult->compass_position, true);
 
+        $categoryScores = is_array($testResult->category_scores)
+            ? $testResult->category_scores
+            : json_decode($testResult->category_scores, true);
+
         $parties = Party::where('is_active', true)->get()->keyBy('id');
         $categories = Category::where('is_active', true)->orderBy('order')->get()->keyBy('id');
 
-        // Ordenar resultados
         arsort($results);
 
-        // Obtener detalles de coincidencias/divergencias
         $answers = $testResult->answers()->with('question.category')->get();
         $partyMatches = $this->getPartyMatches($answers, $parties);
         $resultsByCategory = $this->getResultsByCategory($answers, $parties, $categories);
 
         $answeredCount = $answers->count();
         $totalQuestions = Question::where('is_active', true)->count();
+
+        // Datos para Open Graph
+        $topPartyId = array_key_first($results);
+        $ogData = [
+            'party_name' => $parties[$topPartyId]->name ?? 'Desconocido',
+            'party_short' => $parties[$topPartyId]->short_name ?? '?',
+            'score' => $results[$topPartyId] ?? 0,
+            'compass_x' => $compassPosition['economic'] ?? 0,
+            'compass_y' => $compassPosition['social'] ?? 0,
+        ];
 
         return view('test.results', compact(
             'testResult',
@@ -203,10 +211,149 @@ class TestController extends Controller
             'partyMatches',
             'resultsByCategory',
             'compassPosition',
+            'categoryScores',
             'answeredCount',
             'totalQuestions',
-            'shareId'
+            'shareId',
+            'ogData'
         ));
+    }
+
+    /**
+     * Comparador de dos resultados
+     */
+    public function compare($shareId1, $shareId2 = null)
+    {
+        $test1 = TestResult::where('share_id', $shareId1)
+            ->where('is_completed', true)
+            ->firstOrFail();
+
+        $test2 = null;
+        if ($shareId2) {
+            $test2 = TestResult::where('share_id', $shareId2)
+                ->where('is_completed', true)
+                ->first();
+        }
+
+        $parties = Party::where('is_active', true)->get()->keyBy('id');
+        $categories = Category::where('is_active', true)->orderBy('order')->get();
+
+        // Procesar datos del test 1
+        $results1 = is_array($test1->results) ? $test1->results : json_decode($test1->results, true);
+        $compass1 = is_array($test1->compass_position) ? $test1->compass_position : json_decode($test1->compass_position, true);
+        $categoryScores1 = is_array($test1->category_scores) ? $test1->category_scores : json_decode($test1->category_scores, true);
+        arsort($results1);
+        $topParty1 = $parties[array_key_first($results1)] ?? null;
+
+        $data1 = [
+            'shareId' => $shareId1,
+            'results' => $results1,
+            'compass' => $compass1,
+            'categoryScores' => $categoryScores1,
+            'topParty' => $topParty1,
+            'topScore' => $results1[array_key_first($results1)] ?? 0,
+        ];
+
+        $data2 = null;
+        $compatibility = null;
+
+        if ($test2) {
+            $results2 = is_array($test2->results) ? $test2->results : json_decode($test2->results, true);
+            $compass2 = is_array($test2->compass_position) ? $test2->compass_position : json_decode($test2->compass_position, true);
+            $categoryScores2 = is_array($test2->category_scores) ? $test2->category_scores : json_decode($test2->category_scores, true);
+            arsort($results2);
+            $topParty2 = $parties[array_key_first($results2)] ?? null;
+
+            $data2 = [
+                'shareId' => $shareId2,
+                'results' => $results2,
+                'compass' => $compass2,
+                'categoryScores' => $categoryScores2,
+                'topParty' => $topParty2,
+                'topScore' => $results2[array_key_first($results2)] ?? 0,
+            ];
+
+            // Calcular compatibilidad
+            $compatibility = $this->calculateCompatibility($compass1, $compass2, $categoryScores1, $categoryScores2);
+        }
+
+        return view('test.compare', compact(
+            'data1',
+            'data2',
+            'parties',
+            'categories',
+            'compatibility',
+            'shareId1',
+            'shareId2'
+        ));
+    }
+
+    /**
+     * Calcular compatibilidad entre dos usuarios
+     */
+    private function calculateCompatibility($compass1, $compass2, $cats1, $cats2): array
+    {
+        // Distancia en la brújula (0-100, donde 100 = idénticos)
+        $dx = ($compass1['economic'] ?? 0) - ($compass2['economic'] ?? 0);
+        $dy = ($compass1['social'] ?? 0) - ($compass2['social'] ?? 0);
+        $distance = sqrt($dx * $dx + $dy * $dy);
+        $maxDistance = sqrt(200 * 200 + 200 * 200); // Diagonal máxima
+        $compassCompatibility = round((1 - ($distance / $maxDistance)) * 100);
+
+        // Similitud por categorías
+        $categoryDiffs = [];
+        $totalDiff = 0;
+        $count = 0;
+
+        foreach ($cats1 ?? [] as $catId => $score1) {
+            $score2 = $cats2[$catId] ?? 50;
+            $diff = abs($score1 - $score2);
+            $categoryDiffs[$catId] = 100 - $diff;
+            $totalDiff += $diff;
+            $count++;
+        }
+
+        $categoryCompatibility = $count > 0 ? round(100 - ($totalDiff / $count)) : 50;
+
+        // Puntuación global (promedio ponderado)
+        $overall = round(($compassCompatibility * 0.4) + ($categoryCompatibility * 0.6));
+
+        // Determinar nivel
+        $level = match (true) {
+            $overall >= 80 => ['text' => '¡Muy compatibles!', 'emoji' => '💚', 'class' => 'success'],
+            $overall >= 60 => ['text' => 'Bastante compatibles', 'emoji' => '💛', 'class' => 'warning'],
+            $overall >= 40 => ['text' => 'Algunas diferencias', 'emoji' => '🧡', 'class' => 'info'],
+            default => ['text' => 'Visiones distintas', 'emoji' => '💜', 'class' => 'secondary'],
+        };
+
+        return [
+            'overall' => $overall,
+            'compass' => $compassCompatibility,
+            'categories' => $categoryCompatibility,
+            'categoryDetails' => $categoryDiffs,
+            'level' => $level,
+        ];
+    }
+
+    /**
+     * Calcular puntuaciones por categoría (para el radar)
+     */
+    private function calculateCategoryScores($answers): array
+    {
+        $categories = Category::where('is_active', true)->get()->keyBy('id');
+        $scores = [];
+
+        foreach ($categories as $catId => $category) {
+            $catAnswers = $answers->filter(fn($a) => $a->question->category_id == $catId);
+
+            if ($catAnswers->count() > 0) {
+                // Convertir respuestas 1-5 a escala 0-100
+                $avgAnswer = $catAnswers->avg('answer');
+                $scores[$catId] = round((($avgAnswer - 1) / 4) * 100);
+            }
+        }
+
+        return $scores;
     }
 
     private function calculateResults($answers): array
@@ -244,14 +391,8 @@ class TestController extends Controller
         ];
     }
 
-    /**
-     * Calcular posición en la brújula política
-     * Eje X: Izquierda económica (-100) a Derecha económica (+100)
-     * Eje Y: Conservador/Autoritario (-100) a Progresista/Libertario (+100)
-     */
     private function calculateCompassPosition($answers): array
     {
-        // Mapeo de categorías a ejes (ajustar según tus categorías)
         $economicCategories = [
             'economía',
             'economia',
@@ -278,7 +419,9 @@ class TestController extends Controller
             'educacion',
             'sanidad',
             'medio ambiente',
-            'medioambiente'
+            'medioambiente',
+            'igualdad',
+            'derechos'
         ];
 
         $economicScores = [];
@@ -292,13 +435,8 @@ class TestController extends Controller
             $categoryName = strtolower($answer->question->category->name);
             $categorySlug = strtolower($answer->question->category->slug ?? '');
 
-            // Convertir respuesta 1-5 a escala -100 a +100
-            // 1 = -100 (muy izquierda/conservador)
-            // 3 = 0 (centro)
-            // 5 = +100 (muy derecha/progresista)
             $normalizedScore = (($answer->answer - 3) / 2) * 100;
 
-            // Determinar a qué eje pertenece
             $isEconomic = false;
             $isSocial = false;
 
@@ -316,7 +454,6 @@ class TestController extends Controller
                 }
             }
 
-            // Si no encaja en ninguno, contar para ambos
             if (!$isEconomic && !$isSocial) {
                 $isEconomic = true;
                 $isSocial = true;
@@ -330,7 +467,6 @@ class TestController extends Controller
             }
         }
 
-        // Calcular medias
         $economicPosition = count($economicScores) > 0
             ? round(array_sum($economicScores) / count($economicScores), 1)
             : 0;
@@ -340,8 +476,8 @@ class TestController extends Controller
             : 0;
 
         return [
-            'economic' => $economicPosition,  // Eje X: - izquierda, + derecha
-            'social' => $socialPosition,      // Eje Y: - conservador, + progresista
+            'economic' => $economicPosition,
+            'social' => $socialPosition,
         ];
     }
 
@@ -417,7 +553,6 @@ class TestController extends Controller
             }
         }
 
-        // Convertir a porcentajes
         foreach ($resultsByCategory as $catId => $partyScores) {
             foreach ($partyScores as $partyId => $scores) {
                 $resultsByCategory[$catId][$partyId] = $scores['max'] > 0
