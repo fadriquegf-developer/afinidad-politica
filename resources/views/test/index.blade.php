@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card">
-                <div class="card-body p-5">
+                <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bold text-dark mb-3">
                             🗳️ {{ __('test.title') }}
@@ -16,52 +16,35 @@
                         </p>
                     </div>
 
-                    {{-- Selector de modo - clic directo inicia test --}}
-                    <h5 class="text-center mb-4">{{ __('test.choose_mode') }}</h5>
-                    <div class="row g-3 mb-5">
-                        <div class="col-md-4">
-                            <form action="{{ route('test.start') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="mode" value="1">
-                                <button type="submit" class="card h-100 w-100 border-0 shadow-sm btn p-0 text-start">
-                                    <div class="card-body text-center">
-                                        <div class="display-6 mb-2">⚡</div>
-                                        <h5 class="card-title">{{ __('test.mode_quick') }}</h5>
-                                        <p class="text-muted mb-1">10 {{ __('test.questions') }}</p>
-                                        <small class="text-muted">~3 {{ __('test.minutes') }}</small>
-                                    </div>
-                                </button>
-                            </form>
+                    {{-- Info del test --}}
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center gap-4 flex-wrap justify-content-center">
+                            <div class="text-center">
+                                <div class="display-6 fw-bold text-primary">{{ $totalQuestions }}</div>
+                                <small class="text-muted">{{ __('test.questions') }}</small>
+                            </div>
+                            <div class="text-center">
+                                <div class="display-6 fw-bold text-primary">~{{ $estimatedMinutes }}</div>
+                                <small class="text-muted">{{ __('test.minutes') }}</small>
+                            </div>
+                            <div class="text-center">
+                                <div class="display-6 fw-bold text-primary">{{ $parties->count() }}</div>
+                                <small class="text-muted">{{ __('test.parties') }}</small>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <form action="{{ route('test.start') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="mode" value="2">
-                                <button type="submit"
-                                    class="card h-100 w-100 border-primary border-2 shadow btn p-0 text-start">
-                                    <div class="card-body text-center">
-                                        <div class="display-6 mb-2">⚖️</div>
-                                        <h5 class="card-title">{{ __('test.mode_normal') }}</h5>
-                                        <p class="text-muted mb-1">20 {{ __('test.questions') }}</p>
-                                        <small class="text-muted">~6 {{ __('test.minutes') }}</small>
-                                    </div>
-                                </button>
-                            </form>
-                        </div>
-                        <div class="col-md-4">
-                            <form action="{{ route('test.start') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="mode" value="3">
-                                <button type="submit" class="card h-100 w-100 border-0 shadow-sm btn p-0 text-start">
-                                    <div class="card-body text-center">
-                                        <div class="display-6 mb-2">🎯</div>
-                                        <h5 class="card-title">{{ __('test.mode_complete') }}</h5>
-                                        <p class="text-muted mb-1">30 {{ __('test.questions') }}</p>
-                                        <small class="text-muted">~10 {{ __('test.minutes') }}</small>
-                                    </div>
-                                </button>
-                            </form>
-                        </div>
+                    </div>
+
+                    {{-- Botón de inicio --}}
+                    <div class="text-center mb-5">
+                        <form action="{{ route('test.start') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                                <i class="bi bi-play-fill me-2"></i>{{ __('test.start_test') }}
+                            </button>
+                        </form>
+                        <p class="text-muted small mt-2">
+                            {{ __('test.can_skip') }}
+                        </p>
                     </div>
 
                     {{-- Categorías --}}
@@ -72,6 +55,7 @@
                                 <span class="category-badge d-block text-center"
                                     style="background: {{ $category->color }}20; color: {{ $category->color }};">
                                     {{ $category->icon }} {{ $category->name }}
+                                    <small class="d-block opacity-75">{{ $category->questions_count }} preg.</small>
                                 </span>
                             </div>
                         @endforeach
@@ -79,7 +63,7 @@
 
                     {{-- Partidos --}}
                     <h5 class="mb-3">{{ __('test.parties_analyzed') }}:</h5>
-                    <div class="d-flex flex-wrap gap-2 mb-4">
+                    <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center">
                         @foreach ($parties as $party)
                             <span class="badge" style="background: {{ $party->color }}; font-size: 0.9rem;">
                                 {{ $party->short_name }}
@@ -87,10 +71,32 @@
                         @endforeach
                     </div>
 
-                    <p class="text-muted text-center mt-4 small">
-                        <i class="bi bi-shield-check me-1"></i>
+                    {{-- Aviso privacidad --}}
+                    <div class="alert alert-light text-center mb-0">
+                        <i class="bi bi-shield-check me-1 text-success"></i>
                         {{ __('test.anonymous') }}
-                    </p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Cómo funciona --}}
+            <div class="card mt-4">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">{{ __('test.how_it_works') }}</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4 text-center">
+                            <div class="display-6 mb-2">1️⃣</div>
+                            <p class="mb-0 small">{{ __('test.step_1') }}</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="display-6 mb-2">2️⃣</div>
+                            <p class="mb-0 small">{{ __('test.step_2') }}</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="display-6 mb-2">3️⃣</div>
+                            <p class="mb-0 small">{{ __('test.step_3') }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

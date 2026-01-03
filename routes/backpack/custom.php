@@ -16,6 +16,11 @@ Route::group([
     ),
     'namespace' => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
+    // Dashboard de estadísticas personalizado
+    Route::get('dashboard', 'DashboardController@index')->name('backpack.dashboard');
+    Route::get('api/stats', 'DashboardController@apiStats')->name('backpack.api.stats');
+
+    // CRUD routes
     Route::crud('party', 'PartyCrudController');
     Route::crud('category', 'CategoryCrudController');
     Route::crud('question', 'QuestionCrudController');

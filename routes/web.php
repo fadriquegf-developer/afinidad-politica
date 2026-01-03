@@ -10,6 +10,9 @@ Route::post('/question/{number}', [TestController::class, 'answer'])->name('test
 Route::get('/results', [TestController::class, 'results'])->name('test.results');
 Route::post('/restart', [TestController::class, 'restart'])->name('test.restart');
 
+// URL compartible de resultados (pública)
+Route::get('/r/{shareId}', [TestController::class, 'shared'])->name('test.shared');
+
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['es', 'ca', 'eu', 'gl'])) {
         session(['locale' => $locale]);

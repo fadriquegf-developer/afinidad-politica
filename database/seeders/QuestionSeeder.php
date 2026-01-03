@@ -266,6 +266,266 @@ class QuestionSeeder extends Seeder
             'Es como preguntar si te sientes más de tu barrio o de tu ciudad. Puedes sentirte las dos cosas, más de una que de otra, o igual.',
             ['psoe' => [3, 'Reconoce identidades múltiples.'], 'pp' => [2, 'Prioriza identidad española.'], 'vox' => [1, 'España como única identidad.'], 'sumar' => [4, 'Reconoce plurinacionalidad.'], 'erc' => [5, 'Identidad catalana primero.'], 'junts' => [5, 'Identidad catalana primero.'], 'pnv' => [5, 'Identidad vasca primero.'], 'bildu' => [5, 'Identidad vasca primero.'], 'alianca-catalana' => [5, 'Identidad catalana primero.']]
         );
+
+        // ==========================================
+        // PENSIONES Y BIENESTAR (Nueva categoría)
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['pensiones-bienestar'],
+            'Las pensiones deben subir siempre al menos lo que sube la vida (IPC).',
+            'Se refiere a si las pensiones deben revalorizarse automáticamente según la inflación para que los jubilados no pierdan poder adquisitivo, o si deben calcularse según otros factores como la sostenibilidad del sistema.',
+            'Imagina que tu abuela cobra 1000€ al mes. Si todo sube de precio un 8%, ¿debería cobrar 1080€ para poder comprar lo mismo, o quedarse igual?',
+            ['psoe' => [5, 'Ha blindado revalorización IPC por ley.'], 'pp' => [3, 'Aprobó subida del 0,25% fijo en 2013.'], 'vox' => [4, 'Apoya revalorización pero con reformas.'], 'sumar' => [5, 'Defiende blindar pensiones.'], 'erc' => [4, 'Apoya revalorización IPC.'], 'junts' => [4, 'Defiende mantener poder adquisitivo.'], 'pnv' => [5, 'Impulsó subidas IPC en 2018-2019.'], 'bildu' => [5, 'Defiende pensiones públicas fuertes.'], 'alianca-catalana' => [3, 'Posiciones moderadas.']]
+        );
+
+        $this->createQuestion(
+            $categories['pensiones-bienestar'],
+            'Los jubilados con pensiones altas deberían pagar más impuestos para ayudar al sistema.',
+            'Se debate si las pensiones más elevadas deberían contribuir más a la sostenibilidad del sistema, ya sea mediante impuestos o cotizaciones adicionales.',
+            'Si en una clase algunos niños tienen más caramelos que otros, ¿los que tienen muchos deberían poner algunos en la caja común para que alcance para todos?',
+            ['psoe' => [4, 'Ha aumentado cotización de rentas altas.'], 'pp' => [2, 'Se opone a subir impuestos.'], 'vox' => [1, 'Propone eximir pensiones de IRPF.'], 'sumar' => [5, 'Defiende mayor progresividad.'], 'erc' => [4, 'Apoya fiscalidad progresiva.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición equilibrada.'], 'bildu' => [5, 'Defiende redistribución.'], 'alianca-catalana' => [2, 'Posiciones liberales.']]
+        );
+
+        $this->createQuestion(
+            $categories['pensiones-bienestar'],
+            'Las pensiones mínimas deberían subir hasta garantizar una vida digna.',
+            'Se propone elevar las pensiones más bajas (mínimas y no contributivas) para que ningún jubilado viva en situación de pobreza.',
+            'Es como asegurarse de que todos los abuelos del barrio tengan suficiente dinero para comer bien, pagar la luz y no pasar frío.',
+            ['psoe' => [5, 'Ha subido pensiones mínimas por encima del IPC.'], 'pp' => [3, 'Apoya mejorarlas con prudencia fiscal.'], 'vox' => [4, 'Defiende pensiones dignas.'], 'sumar' => [5, 'Propone vincular a salario mínimo.'], 'erc' => [5, 'Defiende pensiones mínimas dignas.'], 'junts' => [4, 'Propone mejorar gradualmente.'], 'pnv' => [4, 'Defiende dignificar pensiones.'], 'bildu' => [5, 'Propone pensión mínima de 1.080€.'], 'alianca-catalana' => [3, 'Posiciones moderadas.']]
+        );
+
+        $this->createQuestion(
+            $categories['pensiones-bienestar'],
+            'Se debería poder complementar la pensión pública con planes de pensiones privados incentivados fiscalmente.',
+            'Se refiere a si el Estado debe fomentar que los trabajadores ahorren para su jubilación en planes privados, además de cotizar a la Seguridad Social.',
+            'Es como tener una hucha del cole (pública) y además otra hucha en casa (privada) para cuando seas mayor.',
+            ['psoe' => [3, 'Prioriza sistema público pero acepta complementarios.'], 'pp' => [4, 'Apoya planes privados.'], 'vox' => [4, 'Defiende libertad de ahorro.'], 'sumar' => [2, 'Prioriza sistema público.'], 'erc' => [3, 'Posición matizada.'], 'junts' => [4, 'Apoya capitalización complementaria.'], 'pnv' => [4, 'Impulsa segundo pilar de pensiones.'], 'bildu' => [2, 'Prioriza sistema público.'], 'alianca-catalana' => [4, 'Apoya ahorro privado.']]
+        );
+
+        // ==========================================
+        // INSTITUCIONES - MONARQUÍA/REPÚBLICA (Nueva categoría)
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['instituciones'],
+            'España debería votar en referéndum si quiere seguir siendo una monarquía o ser una república.',
+            'Se plantea si los ciudadanos deberían poder decidir mediante votación la forma de Estado, eligiendo entre mantener la monarquía parlamentaria o instaurar una república.',
+            'Es como si en tu comunidad de vecinos votarais si queréis seguir teniendo un presidente heredado o elegir uno nuevo cada cierto tiempo.',
+            ['psoe' => [2, 'Defiende monarquía parlamentaria actual.'], 'pp' => [1, 'Defiende firmemente la monarquía.'], 'vox' => [1, 'Defiende la monarquía.'], 'sumar' => [4, 'Posiciones republicanas.'], 'erc' => [5, 'Propone referéndum monarquía/república.'], 'junts' => [4, 'Posiciones republicanas.'], 'pnv' => [3, 'Propone reformar inviolabilidad del Rey.'], 'bildu' => [5, 'Republicano.'], 'alianca-catalana' => [5, 'Propone república catalana.']]
+        );
+
+        $this->createQuestion(
+            $categories['instituciones'],
+            'El Rey debería poder ser juzgado por delitos como cualquier ciudadano.',
+            'La Constitución española establece que el Rey es inviolable y no está sujeto a responsabilidad. Se debate si debería eliminarse esta inmunidad para actos no relacionados con sus funciones.',
+            'Es como preguntar si el capitán de un equipo debería seguir las mismas reglas que todos, o tener reglas especiales.',
+            ['psoe' => [3, 'No propone cambios.'], 'pp' => [2, 'Defiende inviolabilidad.'], 'vox' => [2, 'Defiende la Corona.'], 'sumar' => [5, 'Propone eliminar inviolabilidad.'], 'erc' => [5, 'Critica impunidad de la Corona.'], 'junts' => [5, 'Crítico con privilegios reales.'], 'pnv' => [4, 'Propone eliminar inviolabilidad en actos no institucionales.'], 'bildu' => [5, 'Critica privilegios monárquicos.'], 'alianca-catalana' => [5, 'Critica la monarquía.']]
+        );
+
+        // ==========================================
+        // MODELO SOCIAL - EUTANASIA
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['modelo-social'],
+            'Las personas con enfermedades terminales deberían poder elegir cuándo y cómo morir (eutanasia).',
+            'Se refiere a si personas con enfermedades graves e incurables deberían tener derecho a solicitar ayuda médica para morir de forma indolora, tal como regula la Ley de Eutanasia aprobada en 2021.',
+            'Es una pregunta muy difícil sobre si las personas muy enfermas que sufren mucho deberían poder decidir despedirse cuando ellas quieran.',
+            ['psoe' => [5, 'Aprobó la Ley de Eutanasia.'], 'pp' => [3, 'Acepta ley actual con reservas.'], 'vox' => [1, 'Propone derogar Ley de Eutanasia.'], 'sumar' => [5, 'Defiende derecho a muerte digna.'], 'erc' => [5, 'Apoya eutanasia.'], 'junts' => [4, 'Apoya ley de eutanasia.'], 'pnv' => [3, 'Posición matizada.'], 'bildu' => [5, 'Apoya derecho a muerte digna.'], 'alianca-catalana' => [2, 'Posiciones conservadoras.']]
+        );
+
+        $this->createQuestion(
+            $categories['modelo-social'],
+            'La gestación subrogada (vientres de alquiler) debería estar permitida y regulada.',
+            'Se debate si debería permitirse que una mujer geste un bebé para otra persona o pareja que no puede tenerlo, a cambio de compensación económica.',
+            'Es cuando una mujer ayuda a otra familia a tener un bebé llevándolo en su barriga, porque ellos no pueden. Es un tema que genera mucho debate.',
+            ['psoe' => [1, 'Rechaza vientres de alquiler.'], 'pp' => [3, 'Posición ambigua.'], 'vox' => [1, 'Rechaza la práctica.'], 'sumar' => [2, 'Posición crítica.'], 'erc' => [3, 'Posición matizada.'], 'junts' => [4, 'Propone debatir y regular.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [2, 'Posición crítica.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        // ==========================================
+        // AGRICULTURA Y RURAL (Nueva categoría)
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['agricultura-rural'],
+            'Los agricultores deberían recibir más ayudas aunque suponga más gasto público.',
+            'Se refiere a si el Estado debe aumentar las subvenciones y apoyo al sector agrario para garantizar la supervivencia de las explotaciones familiares y la soberanía alimentaria.',
+            'Es como decidir si hay que dar más dinero a los que cultivan la comida para que no tengan que cerrar sus granjas.',
+            ['psoe' => [4, 'Apoya ayudas mediante PAC.'], 'pp' => [4, 'Defiende apoyar al campo.'], 'vox' => [5, 'Prioriza ayudas al campo español.'], 'sumar' => [4, 'Apoya explotaciones familiares.'], 'erc' => [4, 'Apoya al sector primario catalán.'], 'junts' => [4, 'Defiende agricultores catalanes.'], 'pnv' => [4, 'Apoya al sector agrario vasco.'], 'bildu' => [5, 'Defiende rentas dignas para baserritarras.'], 'alianca-catalana' => [4, 'Apoya soberanía alimentaria catalana.']]
+        );
+
+        $this->createQuestion(
+            $categories['agricultura-rural'],
+            'La agricultura debe ser más ecológica aunque baje la producción.',
+            'Se debate si la producción agraria debe transicionar hacia métodos más sostenibles y respetuosos con el medio ambiente, aunque esto pueda reducir los rendimientos a corto plazo.',
+            'Es como elegir entre plantar muchas cosas usando productos químicos, o plantar menos pero sin dañar la tierra ni los bichos.',
+            ['psoe' => [4, 'Apoya transición ecológica.'], 'pp' => [3, 'Prioriza productividad con matices.'], 'vox' => [1, 'Rechaza imposiciones ecologistas.'], 'sumar' => [5, 'Propone transición agroecológica.'], 'erc' => [4, 'Apoya agricultura sostenible.'], 'junts' => [3, 'Posición equilibrada.'], 'pnv' => [4, 'Apoya producción sostenible.'], 'bildu' => [5, 'Defiende agroecología.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        $this->createQuestion(
+            $categories['agricultura-rural'],
+            'El lobo y otras especies protegidas deben poder cazarse para proteger al ganado.',
+            'Se debate si especies como el lobo, incluidas en listados de protección, deberían poder ser cazadas para evitar daños a la ganadería extensiva.',
+            'Es como decidir si los animales salvajes que a veces atacan a las ovejas de los pastores deberían poder ser cazados o hay que protegerlos.',
+            ['psoe' => [2, 'Mantiene protección del lobo.'], 'pp' => [4, 'Propone permitir control poblacional.'], 'vox' => [5, 'Propone excluir lobo de protección.'], 'sumar' => [2, 'Defiende protección de especies.'], 'erc' => [2, 'Posición ecologista.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición pragmática.'], 'bildu' => [2, 'Posición ecologista.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        // ==========================================
+        // EUROPA Y MUNDO (Nueva categoría)
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['europa-mundo'],
+            'La Unión Europea debería tener más poder sobre los países miembros.',
+            'Se debate si la UE debería avanzar hacia una mayor integración (federalismo) con más competencias comunes, o si los Estados deben mantener su soberanía nacional.',
+            'Es como decidir si las normas del colegio las pone solo tu clase, o hay normas generales que valen para todos los coles del barrio.',
+            ['psoe' => [4, 'Apoya más integración europea.'], 'pp' => [3, 'Apoya UE pero con soberanía.'], 'vox' => [1, 'Rechaza federalismo europeo.'], 'sumar' => [5, 'Propone Europa más federal y democrática.'], 'erc' => [4, 'Apoya desarrollo federal UE.'], 'junts' => [3, 'Europa de los pueblos.'], 'pnv' => [4, 'Pro-europeo con participación vasca.'], 'bildu' => [3, 'Pro-europeo con matices.'], 'alianca-catalana' => [3, 'Europa pero con identidad catalana.']]
+        );
+
+        $this->createQuestion(
+            $categories['europa-mundo'],
+            'España debería poder ignorar normas europeas cuando perjudiquen sus intereses.',
+            'Se refiere a si la legislación nacional debe prevalecer sobre el Derecho europeo en determinadas materias que afecten al interés general del Estado.',
+            'Es como preguntar si tu clase puede saltarse las normas del colegio cuando crea que no son justas para vosotros.',
+            ['psoe' => [2, 'Defiende cumplir legislación UE.'], 'pp' => [2, 'Respeta marco europeo.'], 'vox' => [5, 'Defiende primacía de la Constitución.'], 'sumar' => [2, 'Defiende compromiso europeo.'], 'erc' => [3, 'Posición matizada.'], 'junts' => [3, 'Posición matizada.'], 'pnv' => [2, 'Pro-europeo.'], 'bildu' => [3, 'Posición crítica pero europeísta.'], 'alianca-catalana' => [3, 'Posición matizada.']]
+        );
+
+        $this->createQuestion(
+            $categories['europa-mundo'],
+            'Las restricciones medioambientales europeas perjudican a la economía española.',
+            'Se debate si las normativas del Pacto Verde Europeo, diseñadas para combatir el cambio climático, suponen una carga excesiva para sectores como la agricultura, industria o automoción española.',
+            'Es como cuando ponen normas en el cole para cuidar el patio, pero algunos niños dicen que les impiden jugar como quieren.',
+            ['psoe' => [2, 'Apoya Pacto Verde.'], 'pp' => [3, 'Pide flexibilidad en aplicación.'], 'vox' => [5, 'Propone suspender Pacto Verde.'], 'sumar' => [1, 'Defiende normativa ambiental UE.'], 'erc' => [2, 'Apoya transición ecológica.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Apoya con pragmatismo.'], 'bildu' => [2, 'Apoya normativa ambiental.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        // ==========================================
+        // MEDIO AMBIENTE - TAUROMAQUIA Y BIENESTAR ANIMAL
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['medio-ambiente'],
+            'Los toros y otros espectáculos con animales deberían prohibirse.',
+            'Se debate si espectáculos como las corridas de toros, que causan sufrimiento animal, deberían estar prohibidos o si deben protegerse como patrimonio cultural.',
+            'Es como preguntar si los espectáculos donde los animales pueden sufrir daño deberían permitirse, o si hay que buscar otras formas de diversión.',
+            ['psoe' => [3, 'No se pronuncia claramente.'], 'pp' => [2, 'Defiende tradición taurina.'], 'vox' => [1, 'Defiende y promueve tauromaquia.'], 'sumar' => [5, 'Propone derogar ley de tauromaquia.'], 'erc' => [5, 'La tortura no es cultura.'], 'junts' => [4, 'Apoya bienestar animal.'], 'pnv' => [3, 'No se pronuncia.'], 'bildu' => [4, 'Posición crítica con toros.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        $this->createQuestion(
+            $categories['medio-ambiente'],
+            'La caza debería tener más restricciones para proteger a los animales.',
+            'Se debate si la actividad cinegética debe estar más regulada o limitada por razones de protección animal y medioambiental, o si debe mantenerse como actividad tradicional y económica del mundo rural.',
+            'Es como decidir si se puede seguir jugando a pillar animales en el campo, o hay que ponerle más normas para protegerlos.',
+            ['psoe' => [3, 'Posición equilibrada.'], 'pp' => [2, 'Defiende la caza.'], 'vox' => [1, 'Defiende la caza sin restricciones.'], 'sumar' => [4, 'Apoya más protección animal.'], 'erc' => [4, 'Posición proteccionista.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición pragmática.'], 'bildu' => [4, 'Posición ecologista.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        // ==========================================
+        // SEGURIDAD Y JUSTICIA - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['seguridad-justicia'],
+            'Debería haber cadena perpetua revisable para los delitos más graves.',
+            'Se refiere a si para crímenes especialmente graves (terrorismo, asesinatos múltiples) debería existir una pena de prisión permanente que solo se revise tras un largo período.',
+            'Es como preguntar si alguien que hace algo muy muy malo debería quedarse castigado para siempre, o siempre debería poder salir algún día.',
+            ['psoe' => [3, 'Acepta prisión permanente revisable actual.'], 'pp' => [5, 'Defiende prisión permanente revisable.'], 'vox' => [5, 'Apoya y quiere ampliar.'], 'sumar' => [1, 'Se opone a prisión permanente.'], 'erc' => [1, 'Rechaza prisión permanente.'], 'junts' => [2, 'Posición crítica.'], 'pnv' => [2, 'Posición crítica.'], 'bildu' => [1, 'Rechaza prisión permanente.'], 'alianca-catalana' => [4, 'Apoya mayor dureza.']]
+        );
+
+        $this->createQuestion(
+            $categories['seguridad-justicia'],
+            'Los presos deberían trabajar obligatoriamente para compensar a la sociedad.',
+            'Se debate si las personas en prisión deberían realizar trabajo obligatorio como parte de su condena, ya sea para su reinserción o como compensación social.',
+            'Es como si los que están castigados tuvieran que ayudar en el cole haciendo tareas útiles mientras cumplen el castigo.',
+            ['psoe' => [2, 'Prioriza trabajo voluntario.'], 'pp' => [4, 'Apoya trabajo en prisión.'], 'vox' => [5, 'Propone trabajo obligatorio.'], 'sumar' => [2, 'Prioriza reinserción voluntaria.'], 'erc' => [2, 'Prioriza reinserción.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [2, 'Prioriza derechos del preso.'], 'alianca-catalana' => [4, 'Apoya trabajo obligatorio.']]
+        );
+
+        // ==========================================
+        // EDUCACIÓN Y SANIDAD - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['educacion-sanidad'],
+            'La religión no debería enseñarse en los colegios públicos.',
+            'Se debate si la asignatura de religión debería eliminarse de los centros educativos públicos, dejándola como opción exclusivamente privada o familiar.',
+            'Es como preguntar si las clases sobre creencias y Dios deberían darse en el cole o solo en casa y en la iglesia.',
+            ['psoe' => [3, 'Mantiene como optativa.'], 'pp' => [2, 'Defiende religión en escuela.'], 'vox' => [1, 'Defiende religión obligatoria.'], 'sumar' => [5, 'Propone eliminarla de colegios públicos.'], 'erc' => [5, 'Escuela laica.'], 'junts' => [4, 'Apoya laicidad.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [5, 'Escuela laica.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        $this->createQuestion(
+            $categories['educacion-sanidad'],
+            'Los servicios de salud mental deberían ser prioritarios y gratuitos.',
+            'Se propone aumentar significativamente los recursos para atención psicológica y psiquiátrica en la sanidad pública, garantizando acceso universal.',
+            'Es como decir que los médicos que ayudan cuando estás triste o muy nervioso deberían estar disponibles para todos sin pagar extra.',
+            ['psoe' => [4, 'Apoya reforzar salud mental.'], 'pp' => [3, 'Apoya mejorar servicios.'], 'vox' => [3, 'Apoya prevención del suicidio.'], 'sumar' => [5, 'Propone ratio psicólogos por habitante.'], 'erc' => [5, 'Defiende salud mental pública.'], 'junts' => [4, 'Apoya mejorar servicios.'], 'pnv' => [4, 'Apoya reforzar salud mental.'], 'bildu' => [5, 'Prioriza salud mental pública.'], 'alianca-catalana' => [3, 'Posición moderada.']]
+        );
+
+        // ==========================================
+        // EMPLEO Y TRABAJO - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['empleo-trabajo'],
+            'Las empresas deberían obligatoriamente publicar los salarios de sus empleados.',
+            'Se propone que las empresas deban hacer públicos los sueldos de todos sus trabajadores para acabar con la brecha salarial y la discriminación.',
+            'Es como si en tu clase todos supierais cuántas chuches recibe cada uno, para que sea justo y no haya favoritismos.',
+            ['psoe' => [4, 'Apoya transparencia salarial.'], 'pp' => [2, 'Prefiere voluntariedad.'], 'vox' => [1, 'Se opone a obligar.'], 'sumar' => [5, 'Propone transparencia total.'], 'erc' => [4, 'Apoya transparencia.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [5, 'Defiende transparencia salarial.'], 'alianca-catalana' => [2, 'Prefiere libre empresa.']]
+        );
+
+        // ==========================================
+        // INMIGRACIÓN - ADICIONALES  
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['inmigracion'],
+            'Los menores no acompañados (menas) deben ser acogidos y formados.',
+            'Se refiere a si los niños y adolescentes extranjeros que llegan solos a España deben recibir protección, educación e integración por parte del Estado.',
+            'Cuando un niño llega solo a España desde otro país porque sus padres no pueden cuidarle, ¿deberíamos ayudarle y cuidarle?',
+            ['psoe' => [4, 'Defiende protección de menores.'], 'pp' => [3, 'Apoya con más control.'], 'vox' => [1, 'Propone deportación.'], 'sumar' => [5, 'Defiende protección total.'], 'erc' => [5, 'Derechos de los menores.'], 'junts' => [4, 'Apoya protección.'], 'pnv' => [4, 'Apoya acogida.'], 'bildu' => [5, 'Defiende derechos de menores.'], 'alianca-catalana' => [2, 'Posición restrictiva.']]
+        );
+
+        // ==========================================
+        // ECONOMÍA Y FISCALIDAD - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['economia-fiscalidad'],
+            'Debería haber un impuesto especial a las grandes fortunas y herencias.',
+            'Se propone crear o aumentar impuestos específicos para personas con grandes patrimonios y para las herencias de alto valor.',
+            'Es como si cuando alguien tiene muchas muchas cosas, tuviera que compartir un poquito más con todos para que el cole funcione mejor.',
+            ['psoe' => [4, 'Ha creado impuesto a grandes fortunas.'], 'pp' => [1, 'Propone eliminar impuesto patrimonio.'], 'vox' => [1, 'Propone eliminar impuesto sucesiones.'], 'sumar' => [5, 'Propone impuesto a ricos más fuerte.'], 'erc' => [4, 'Apoya fiscalidad progresiva.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Gestiona impuestos propios.'], 'bildu' => [5, 'Defiende fiscalidad muy progresiva.'], 'alianca-catalana' => [2, 'Posiciones liberales.']]
+        );
+
+        $this->createQuestion(
+            $categories['economia-fiscalidad'],
+            'El Estado debería crear una banca pública para competir con los bancos privados.',
+            'Se propone crear un banco de titularidad estatal que ofrezca servicios financieros básicos y compita con la banca privada.',
+            'Es como si el ayuntamiento abriera su propia tienda para que las cosas no sean tan caras como en las tiendas privadas.',
+            ['psoe' => [3, 'Posición tibia.'], 'pp' => [1, 'Se opone a banca pública.'], 'vox' => [2, 'Prefiere libre mercado.'], 'sumar' => [5, 'Propone banca pública.'], 'erc' => [4, 'Apoya banca pública.'], 'junts' => [2, 'Posición liberal.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [5, 'Defiende banca pública.'], 'alianca-catalana' => [2, 'Prefiere libre mercado.']]
+        );
+
+        // ==========================================
+        // VIVIENDA - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['vivienda'],
+            'Los grandes propietarios de viviendas vacías deberían pagar un impuesto especial.',
+            'Se propone penalizar fiscalmente a quienes tengan muchas viviendas vacías, para incentivar su puesta en el mercado de alquiler.',
+            'Si alguien tiene muchas casas pero las deja vacías mientras otros no tienen dónde vivir, ¿debería pagar más impuestos?',
+            ['psoe' => [4, 'Apoya penalizar vivienda vacía.'], 'pp' => [2, 'Prefiere incentivos.'], 'vox' => [1, 'Se opone a intervenir.'], 'sumar' => [5, 'Propone impuesto a vivienda vacía.'], 'erc' => [5, 'Apoya penalizar vivienda vacía.'], 'junts' => [3, 'Posición moderada.'], 'pnv' => [3, 'Posición moderada.'], 'bildu' => [5, 'Defiende penalizar vivienda vacía.'], 'alianca-catalana' => [2, 'Prefiere libre mercado.']]
+        );
+
+        // ==========================================
+        // MODELO TERRITORIAL - ADICIONALES
+        // ==========================================
+
+        $this->createQuestion(
+            $categories['modelo-territorial'],
+            'Madrid tiene demasiados privilegios respecto a otras regiones.',
+            'Se debate si la capital concentra excesivos recursos, infraestructuras y sedes de empresas en detrimento de otras comunidades autónomas.',
+            'Es como si un niño de la clase tuviera más juguetes y atención solo porque se sienta en la primera fila.',
+            ['psoe' => [3, 'Reconoce desequilibrios.'], 'pp' => [2, 'Defiende modelo actual.'], 'vox' => [2, 'Defiende unidad y capitalidad.'], 'sumar' => [4, 'Critica centralismo.'], 'erc' => [5, 'Critica centralismo madrileño.'], 'junts' => [5, 'Critica privilegios de Madrid.'], 'pnv' => [4, 'Critica centralismo.'], 'bildu' => [5, 'Critica modelo radial.'], 'alianca-catalana' => [5, 'Critica expolio fiscal.']]
+        );
     }
 
     private function createQuestion(Category $category, string $text, string $explanation, string $explanationSimple, array $positions): void

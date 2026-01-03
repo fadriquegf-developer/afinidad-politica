@@ -40,7 +40,7 @@ return [
     'styles' => [
         base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css'),
         base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css'),
-        base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css'),
+        // base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css'),
         // base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/dotted-background.css'),
         // base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/vertical-lines-background.css'),
         // base_path('vendor/backpack/theme-tabler/resources/assets/css/skins/pinstripe-background.css'),

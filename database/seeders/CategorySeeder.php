@@ -20,6 +20,10 @@ class CategorySeeder extends Seeder
             ['name' => 'Vivienda', 'slug' => 'vivienda', 'icon' => '🏠', 'color' => '#F97316', 'description' => 'Acceso a vivienda y regulación del alquiler', 'order' => 8],
             ['name' => 'Seguridad y Justicia', 'slug' => 'seguridad-justicia', 'icon' => '⚖️', 'color' => '#6366F1', 'description' => 'Sistema judicial y seguridad ciudadana', 'order' => 9],
             ['name' => 'Lengua e Identidad', 'slug' => 'lengua-identidad', 'icon' => '🗣️', 'color' => '#8B5CF6', 'description' => 'Lenguas cooficiales e identidad cultural', 'order' => 10],
+            ['name' => 'Pensiones y Bienestar', 'slug' => 'pensiones-bienestar', 'icon' => '👴', 'color' => '#9333EA', 'description' => 'Sistema de pensiones y protección social', 'order' => 11],
+            ['name' => 'Instituciones', 'slug' => 'instituciones', 'icon' => '🏰', 'color' => '#DC2626', 'description' => 'Monarquía, república y forma de Estado', 'order' => 12],
+            ['name' => 'Agricultura y Rural', 'slug' => 'agricultura-rural', 'icon' => '🌾', 'color' => '#65A30D', 'description' => 'Campo, ganadería y mundo rural', 'order' => 13],
+            ['name' => 'Europa y Mundo', 'slug' => 'europa-mundo', 'icon' => '🇪🇺', 'color' => '#2563EB', 'description' => 'Unión Europea y relaciones internacionales', 'order' => 14],
         ];
 
         foreach ($categories as $category) {
