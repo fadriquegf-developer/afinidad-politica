@@ -14,6 +14,7 @@ class Question extends Model
         'text',
         'text_ca',
         'text_eu',
+        'text_gl',
         'explanation',
         'is_active',
         'order'

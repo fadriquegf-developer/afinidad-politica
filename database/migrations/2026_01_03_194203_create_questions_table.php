@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('text');
             $table->text('text_ca')->nullable();
             $table->text('text_eu')->nullable();
+            $table->text('text_gl')->nullable();
             $table->text('explanation')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('order')->default(0);

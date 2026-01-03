@@ -2,74 +2,60 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PartyRequest;
+use App\Models\Party;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 
-/**
- * Class PartyCrudController
- * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
- */
 class PartyCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     * 
-     * @return void
-     */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Party::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/party');
-        CRUD::setEntityNameStrings('party', 'parties');
+        $this->crud->setModel(Party::class);
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/party');
+        $this->crud->setEntityNameStrings('partido', 'partidos');
+        $this->crud->orderBy('order');
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     * 
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // set columns from db columns.
-
-        /**
-         * Columns can be defined using the fluent syntax:
-         * - CRUD::column('price')->type('number');
-         */
+        $this->crud->addColumn(['name' => 'order', 'label' => '#', 'type' => 'number']);
+        $this->crud->addColumn(['name' => 'short_name', 'label' => 'Siglas']);
+        $this->crud->addColumn(['name' => 'name', 'label' => 'Nombre']);
+        $this->crud->addColumn([
+            'name' => 'color',
+            'label' => 'Color',
+            'type' => 'custom_html',
+            'value' => fn($entry) => '<span style="background:' . $entry->color . ';padding:2px 12px;border-radius:4px;">&nbsp;</span>'
+        ]);
+        $this->crud->addColumn(['name' => 'territorial_scope', 'label' => 'Ámbito']);
+        $this->crud->addColumn(['name' => 'is_active', 'label' => 'Activo', 'type' => 'boolean']);
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(PartyRequest::class);
-        CRUD::setFromDb(); // set fields from db columns.
-
-        /**
-         * Fields can be defined using the fluent syntax:
-         * - CRUD::field('price')->type('number');
-         */
+        $this->crud->addField(['name' => 'name', 'label' => 'Nombre', 'type' => 'text']);
+        $this->crud->addField(['name' => 'short_name', 'label' => 'Siglas', 'type' => 'text']);
+        $this->crud->addField(['name' => 'slug', 'label' => 'Slug', 'type' => 'text']);
+        $this->crud->addField(['name' => 'color', 'label' => 'Color', 'type' => 'color']);
+        $this->crud->addField(['name' => 'logo', 'label' => 'Logo', 'type' => 'upload', 'upload' => true]);
+        $this->crud->addField(['name' => 'ideology', 'label' => 'Ideología', 'type' => 'text']);
+        $this->crud->addField(['name' => 'description', 'label' => 'Descripción', 'type' => 'textarea']);
+        $this->crud->addField([
+            'name' => 'territorial_scope',
+            'label' => 'Ámbito territorial',
+            'type' => 'select_from_array',
+            'options' => ['nacional' => 'Nacional', 'autonomico' => 'Autonómico']
+        ]);
+        $this->crud->addField(['name' => 'website', 'label' => 'Web', 'type' => 'url']);
+        $this->crud->addField(['name' => 'order', 'label' => 'Orden', 'type' => 'number', 'default' => 0]);
+        $this->crud->addField(['name' => 'is_active', 'label' => 'Activo', 'type' => 'checkbox', 'default' => true]);
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();

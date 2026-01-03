@@ -16,6 +16,7 @@ class PartyPosition extends Model
         'justification',
         'justification_ca',
         'justification_eu',
+        'justification_gl',
         'weight'
     ];
 

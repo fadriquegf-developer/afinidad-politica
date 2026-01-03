@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('justification')->nullable();
             $table->text('justification_ca')->nullable();
             $table->text('justification_eu')->nullable();
+            $table->text('justification_gl')->nullable();
             $table->tinyInteger('weight')->default(3)->comment('1-5: importancia');
             $table->timestamps();
 
