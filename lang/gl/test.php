@@ -33,4 +33,12 @@ return [
     'restart' => 'Repetir test',
     'share' => 'Compartir',
     'your_top_party' => 'A túa maior afinidade',
+    'choose_mode' => 'Cantas preguntas queres responder?',
+    'mode_quick' => 'Rápido',
+    'mode_normal' => 'Normal',
+    'mode_complete' => 'Completo',
+    'questions_per_category' => 'pregunta por categoría|preguntas por categoría',
+    'estimated_time' => 'Tempo estimado',
+    'what_means' => 'Que significa isto?',
+    'still_not_clear' => 'Aínda non o entendo?',
 ];

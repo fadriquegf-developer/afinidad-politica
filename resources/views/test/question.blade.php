@@ -15,7 +15,7 @@
                                 {{ $category->icon }} {{ $category->name }}
                             </span>
                             <span class="text-muted">
-                                {{ __('test.question') }} {{ $number }} {{ __('test.of') }} {{ $total }}
+                                {{ $number }} {{ __('test.of') }} {{ $total }}
                             </span>
                         </div>
                         <div class="progress">
@@ -25,89 +25,80 @@
                     </div>
 
                     {{-- Pregunta --}}
-                    <h4 class="mb-5 text-center lh-base">
-                        @php
-                            $locale = app()->getLocale();
-                            $textField = 'text_' . $locale;
-                            $questionText =
-                                $locale !== 'es' && $question->$textField ? $question->$textField : $question->text;
-                        @endphp
-                        {{ $questionText }}
-                    </h4>
+                    @php
+                        $locale = app()->getLocale();
+                        $textField = 'text_' . $locale;
+                        $questionText =
+                            $locale !== 'es' && $question->$textField ? $question->$textField : $question->text;
+                    @endphp
+                    <h4 class="mb-4 text-center lh-base">{{ $questionText }}</h4>
 
-                    {{-- Formulario --}}
-                    <form action="{{ route('test.answer', $number) }}" method="POST" x-data="{ answer: {{ $existingAnswer->answer ?? 'null' }}, importance: {{ $existingAnswer->importance ?? 3 }} }">
-                        @csrf
-
-                        <p class="text-center text-muted mb-3">{{ __('test.your_opinion') }}</p>
-
-                        {{-- Opciones de respuesta --}}
-                        <div class="d-flex justify-content-center gap-2 gap-md-3 mb-4">
-                            <button type="button" class="btn btn-outline-danger btn-answer"
-                                :class="{ 'active bg-danger text-white': answer === 1 }" @click="answer = 1"
-                                title="{{ __('test.strongly_disagree') }}">😠</button>
-                            <button type="button" class="btn btn-outline-warning btn-answer"
-                                :class="{ 'active bg-warning': answer === 2 }" @click="answer = 2"
-                                title="{{ __('test.disagree') }}">😕</button>
-                            <button type="button" class="btn btn-outline-secondary btn-answer"
-                                :class="{ 'active bg-secondary text-white': answer === 3 }" @click="answer = 3"
-                                title="{{ __('test.neutral') }}">😐</button>
-                            <button type="button" class="btn btn-outline-info btn-answer"
-                                :class="{ 'active bg-info text-white': answer === 4 }" @click="answer = 4"
-                                title="{{ __('test.agree') }}">🙂</button>
-                            <button type="button" class="btn btn-outline-success btn-answer"
-                                :class="{ 'active bg-success text-white': answer === 5 }" @click="answer = 5"
-                                title="{{ __('test.strongly_agree') }}">😃</button>
-                        </div>
-
-                        <div class="text-center mb-4">
-                            <small class="text-muted">
-                                <span class="me-3">😠 {{ __('test.strongly_disagree') }}</span>
-                                <span>😃 {{ __('test.strongly_agree') }}</span>
-                            </small>
-                        </div>
-
-                        <input type="hidden" name="answer" x-model="answer">
-
-                        {{-- Importancia --}}
-                        <div class="mb-4" x-show="answer !== null" x-transition>
-                            <p class="text-center text-muted mb-2">{{ __('test.importance') }}</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <button type="button" class="btn btn-sm"
-                                        :class="importance >= {{ $i }} ? 'btn-primary' : 'btn-outline-primary'"
-                                        @click="importance = {{ $i }}">★</button>
-                                @endfor
-                            </div>
-                            <div class="text-center mt-1">
-                                <small class="text-muted">
-                                    <span class="me-3">{{ __('test.low') }}</span>
-                                    <span>{{ __('test.high') }}</span>
-                                </small>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="importance" x-model="importance">
-
-                        {{-- Navegación --}}
-                        <div class="d-flex justify-content-between mt-5">
-                            @if ($number > 1)
-                                <a href="{{ route('test.question', $number - 1) }}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-arrow-left me-1"></i> {{ __('test.previous') }}
-                                </a>
-                            @else
-                                <div></div>
-                            @endif
-
-                            <button type="submit" class="btn btn-primary" :disabled="answer === null">
-                                @if ($number >= $total)
-                                    {{ __('test.see_results') }} <i class="bi bi-check-lg ms-1"></i>
-                                @else
-                                    {{ __('test.next') }} <i class="bi bi-arrow-right ms-1"></i>
-                                @endif
+                    {{-- Explicaciones colapsables --}}
+                    <div class="text-center mb-4" x-data="{ showExplanation: false, showSimple: false }">
+                        @if ($question->explanation)
+                            <button type="button" class="btn btn-link btn-sm text-muted"
+                                @click="showExplanation = !showExplanation">
+                                <i class="bi bi-question-circle me-1"></i>{{ __('test.what_means') }}
                             </button>
-                        </div>
-                    </form>
+
+                            <div x-show="showExplanation" x-transition class="alert alert-light text-start mt-2">
+                                {{ $question->explanation }}
+
+                                @if ($question->explanation_simple)
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-link btn-sm p-0 text-muted"
+                                            @click="showSimple = !showSimple">
+                                            {{ __('test.still_not_clear') }}
+                                        </button>
+                                        <div x-show="showSimple" x-transition class="alert alert-info mt-2 mb-0">
+                                            🧒 {{ $question->explanation_simple }}
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Respuestas - Click directo envía --}}
+                    <div class="d-flex justify-content-center gap-2 gap-md-3 mb-3">
+                        @foreach ([1 => '😠', 2 => '😕', 3 => '😐', 4 => '🙂', 5 => '😃'] as $value => $emoji)
+                            <form action="{{ route('test.answer', $number) }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="answer" value="{{ $value }}">
+                                <button type="submit"
+                                    class="btn btn-outline-{{ ['danger', 'warning', 'secondary', 'info', 'success'][$value - 1] }} btn-answer {{ ($existingAnswer->answer ?? null) == $value ? 'active bg-' . ['danger', 'warning', 'secondary', 'info', 'success'][$value - 1] . ' text-white' : '' }}">
+                                    {{ $emoji }}
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <small class="text-muted">
+                            😠 {{ __('test.strongly_disagree') }} — {{ __('test.strongly_agree') }} 😃
+                        </small>
+                    </div>
+
+                    {{-- Navegación --}}
+                    <div class="d-flex justify-content-between mt-4">
+                        @if ($number > 1)
+                            <a href="{{ route('test.question', $number - 1) }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> {{ __('test.previous') }}
+                            </a>
+                        @else
+                            <div></div>
+                        @endif
+
+                        @if ($existingAnswer && $number < $total)
+                            <a href="{{ route('test.question', $number + 1) }}" class="btn btn-outline-secondary btn-sm">
+                                {{ __('test.next') }} <i class="bi bi-arrow-right"></i>
+                            </a>
+                        @elseif($existingAnswer && $number >= $total)
+                            <a href="{{ route('test.results') }}" class="btn btn-primary btn-sm">
+                                {{ __('test.see_results') }} <i class="bi bi-check-lg"></i>
+                            </a>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

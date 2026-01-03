@@ -16,6 +16,7 @@ class Question extends Model
         'text_eu',
         'text_gl',
         'explanation',
+        'explanation_simple',
         'is_active',
         'order'
     ];

@@ -20,15 +20,19 @@ class TestController extends Controller
             ->orderBy('order')
             ->get();
 
-        $totalQuestions = $categories->sum('questions_count');
         $parties = Party::where('is_active', true)->orderBy('order')->get();
 
-        return view('test.index', compact('categories', 'totalQuestions', 'parties'));
+        return view('test.index', compact('categories', 'parties'));
     }
 
     public function start(Request $request)
     {
+        $request->validate([
+            'mode' => 'required|integer|min:1|max:3'
+        ]);
+
         $sessionId = Str::uuid();
+        $mode = $request->mode;
 
         $testResult = TestResult::create([
             'session_id' => $sessionId,
@@ -36,34 +40,55 @@ class TestController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        session(['test_id' => $testResult->id]);
+        // Seleccionar preguntas según modo
+        $questions = $this->getQuestionsForMode($mode);
+
+        session([
+            'test_id' => $testResult->id,
+            'test_mode' => $mode,
+            'test_questions' => $questions->pluck('id')->toArray()
+        ]);
 
         return redirect()->route('test.question', 1);
+    }
+
+    private function getQuestionsForMode(int $mode)
+    {
+        $categories = Category::where('is_active', true)->orderBy('order')->get();
+        $questions = collect();
+
+        foreach ($categories as $category) {
+            $categoryQuestions = Question::where('category_id', $category->id)
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->take($mode)
+                ->get();
+
+            $questions = $questions->concat($categoryQuestions);
+        }
+
+        return $questions;
     }
 
     public function question($number)
     {
         $testId = session('test_id');
-        if (!$testId) {
+        $questionIds = session('test_questions');
+
+        if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
         }
 
-        $questions = Question::where('is_active', true)
-            ->orderBy('category_id')
-            ->orderBy('order')
-            ->get();
-
-        $total = $questions->count();
+        $total = count($questionIds);
         $index = $number - 1;
 
         if ($index < 0 || $index >= $total) {
             return redirect()->route('test.results');
         }
 
-        $question = $questions[$index];
+        $question = Question::with('category')->findOrFail($questionIds[$index]);
         $category = $question->category;
 
-        // Verificar si ya fue respondida
         $existingAnswer = TestAnswer::where('test_result_id', $testId)
             ->where('question_id', $question->id)
             ->first();
@@ -74,29 +99,25 @@ class TestController extends Controller
     public function answer(Request $request, $number)
     {
         $testId = session('test_id');
-        if (!$testId) {
+        $questionIds = session('test_questions');
+
+        if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
         }
 
         $request->validate([
             'answer' => 'required|integer|min:1|max:5',
-            'importance' => 'integer|min:1|max:5',
         ]);
 
-        $questions = Question::where('is_active', true)
-            ->orderBy('category_id')
-            ->orderBy('order')
-            ->get();
-
         $index = $number - 1;
-        $question = $questions[$index];
+        $questionId = $questionIds[$index];
 
         TestAnswer::updateOrCreate(
-            ['test_result_id' => $testId, 'question_id' => $question->id],
-            ['answer' => $request->answer, 'importance' => $request->importance ?? 3]
+            ['test_result_id' => $testId, 'question_id' => $questionId],
+            ['answer' => $request->answer, 'importance' => 3]
         );
 
-        $total = $questions->count();
+        $total = count($questionIds);
 
         if ($number >= $total) {
             return redirect()->route('test.results');
@@ -119,7 +140,6 @@ class TestController extends Controller
             return redirect()->route('test.index');
         }
 
-        // Calcular afinidad con cada partido
         $parties = Party::where('is_active', true)->get();
         $results = [];
 
@@ -134,7 +154,7 @@ class TestController extends Controller
 
                 if ($position) {
                     $diff = abs($answer->answer - $position->position);
-                    $weight = $answer->importance * $position->weight;
+                    $weight = $position->weight;
                     $totalScore += (4 - $diff) * $weight;
                     $maxScore += 4 * $weight;
                 }
@@ -145,7 +165,6 @@ class TestController extends Controller
 
         arsort($results);
 
-        // Guardar resultados
         $topPartyId = array_key_first($results);
         $testResult->update([
             'results' => $results,
@@ -161,7 +180,7 @@ class TestController extends Controller
 
     public function restart()
     {
-        session()->forget('test_id');
+        session()->forget(['test_id', 'test_mode', 'test_questions']);
         return redirect()->route('test.index');
     }
 }

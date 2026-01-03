@@ -33,4 +33,12 @@ return [
     'restart' => 'Testa errepikatu',
     'share' => 'Partekatu',
     'your_top_party' => 'Zure afinitate handiena',
+    'choose_mode' => 'Zenbat galdera erantzun nahi dituzu?',
+    'mode_quick' => 'Azkarra',
+    'mode_normal' => 'Normala',
+    'mode_complete' => 'Osoa',
+    'questions_per_category' => 'galdera kategoriako|galdera kategoriako',
+    'estimated_time' => 'Estimatutako denbora',
+    'what_means' => 'Zer esan nahi du honek?',
+    'still_not_clear' => 'Oraindik ez dut ulertzen?',
 ];
