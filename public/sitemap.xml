@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    
+    <!-- Página principal -->
+    <url>
+        <loc>https://afinidadpolitica.es/</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="es" href="https://afinidadpolitica.es/?lang=es"/>
+        <xhtml:link rel="alternate" hreflang="ca" href="https://afinidadpolitica.es/?lang=ca"/>
+        <xhtml:link rel="alternate" hreflang="eu" href="https://afinidadpolitica.es/?lang=eu"/>
+        <xhtml:link rel="alternate" hreflang="gl" href="https://afinidadpolitica.es/?lang=gl"/>
+    </url>
+    
+    <!-- Páginas legales -->
+    <url>
+        <loc>https://afinidadpolitica.es/privacidad</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://afinidadpolitica.es/aviso-legal</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://afinidadpolitica.es/cookies</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <!-- Páginas informativas -->
+    <url>
+        <loc>https://afinidadpolitica.es/metodologia</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://afinidadpolitica.es/sobre-nosotros</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+</urlset>

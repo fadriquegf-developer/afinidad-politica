@@ -371,6 +371,18 @@
 @endsection
 
 @push('scripts')
+    <script>
+        // Trackear que el usuario completó el test
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'test_completed', {
+                    'event_category': 'engagement',
+                    'event_label': '{{ $ogData['party_short'] ?? 'unknown' }}',
+                    'value': {{ $ogData['score'] ?? 0 }}
+                });
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Gráfico Radar

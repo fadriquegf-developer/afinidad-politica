@@ -130,4 +130,7 @@ return [
     'og_result_description' => 'He fet el Test d\'Afinitat Política. Descobreix el teu!',
     'welcome_title' => 'Quin partit s\'alinea amb tu?',
     'welcome_description' => 'Respon preguntes sobre temes polítics i descobreix quins partits espanyols s\'acosten més a les teves idees. Anònim, gratuït i neutral.',
+
+    'back_to_home' => 'Tornar a l\'inici',
+    'language' => 'Idioma',
 ];

@@ -130,4 +130,7 @@ return [
     'og_result_description' => 'He hecho el Test de Afinidad Política. ¡Descubre el tuyo!',
     'welcome_title' => '¿Qué partido se alinea contigo?',
     'welcome_description' => 'Responde preguntas sobre temas políticos y descubre qué partidos españoles se acercan más a tus ideas. Anónimo, gratuito y neutral.',
+
+    'back_to_home' => 'Volver al inicio',
+    'language' => 'Idioma',
 ];

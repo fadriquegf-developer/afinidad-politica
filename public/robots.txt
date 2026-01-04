@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Rutas a excluir
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+
+# Sitemap
+Sitemap: https://afinidadpolitica.es/sitemap.xml
+
+# Crawl-delay (opcional, para ser amable con los bots)
+Crawl-delay: 1

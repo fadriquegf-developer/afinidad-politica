@@ -130,4 +130,7 @@ return [
     'og_result_description' => 'Afinitate Politikoaren Testa egin dut. Ezagutu zurea!',
     'welcome_title' => 'Zein alderdi lerrokatzen da zurekin?',
     'welcome_description' => 'Erantzun gai politikoei buruzko galderak eta ezagutu zein alderdi espainiar hurbiltzen diren gehien zure ideietara. Anonimoa, doakoa eta neutrala.',
+
+    'back_to_home' => 'Hasierara itzuli',
+    'language' => 'Hizkuntza',
 ];
