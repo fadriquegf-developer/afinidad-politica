@@ -14,7 +14,7 @@ return [
     'minutes' => 'minutos',
     'estimated_time' => 'minutos aprox.',
     'parties' => 'partidos',
-    'parties_analyzed' => 'partidos analizados',
+    'parties_analyzed' => 'Partidos analizados',
     'can_skip' => 'Puedes saltar las preguntas que no sepas responder',
     'categories_evaluated' => 'Categorías que evaluaremos',
     'anonymous' => 'Tu respuesta es 100% anónima. No guardamos datos personales.',

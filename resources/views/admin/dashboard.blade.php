@@ -164,7 +164,7 @@
                                             <td class="text-center">{{ $q['answers_count'] }}</td>
                                             <td class="text-center">
                                                 <span
-                                                    class="badge bg-{{ $q['variance'] > 1.5 ? 'danger' : ($q['variance'] > 1 ? 'warning' : 'success') }}">
+                                                    class="badge bg-{{ $q['variance'] > 1.5 ? 'danger' : ($q['variance'] > 1 ? 'warning' : 'success') }} text-white">
                                                     {{ $q['variance'] }}
                                                 </span>
                                             </td>
@@ -230,7 +230,7 @@
                                                 <small>{{ $test['completed_at'] }}</small>
                                             </td>
                                             <td>
-                                                <span class="badge" style="background: {{ $test['party_color'] }}">
+                                                <span class="badge text-white" style="background: {{ $test['party_color'] }}">
                                                     {{ $test['party_name'] }}
                                                 </span>
                                             </td>
