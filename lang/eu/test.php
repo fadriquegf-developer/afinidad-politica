@@ -68,6 +68,11 @@ return [
     'compass_center' => 'Erdia',
     'economic' => 'Ekonomikoa',
     'social' => 'Soziala',
+    'compass_quadrant_left_progressive' => 'Ezk. Aurrerakoia',
+    'compass_quadrant_right_progressive' => 'Esk. Aurrerakoia',
+    'compass_quadrant_left_conservative' => 'Ezk. Kontserbadorea',
+    'compass_quadrant_right_conservative' => 'Esk. Kontserbadorea',
+    'compass_note' => 'Iparrorratz honek ez ditu lurralde-antolaketari buruzko jarrerak islatzen.',
 
     // Radar
     'your_profile_by_category' => 'Zure profila kategoriaka',
@@ -112,4 +117,10 @@ return [
 
     // Open Graph
     'og_description' => 'Ezagutu zein alderdi politiko datorren bat gehien zure ideiekin. Test doakoa eta anonimoa.',
+
+    'combined' => 'Konbinatua',
+    'profile_comparison' => 'Profilen konparaketa',
+    'share_comparison_desc' => 'Bidali esteka hau besteek konparaketa ikus dezaten',
+    'take_test_again' => 'Testa berriro egin',
+    'top_affinity' => 'Afinitate handiena',
 ];

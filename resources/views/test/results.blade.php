@@ -61,15 +61,26 @@
                         <div class="col-lg-6">
                             <div class="text-center p-3 rounded-3 h-100"
                                 style="background: #f8f9fa; border: 1px solid #dee2e6;">
-                                <h5 class="mb-3">🧭 {{ __('test.your_political_compass') }}</h5>
+                                <h5 class="mb-4">🧭 {{ __('test.your_political_compass') }}</h5>
 
                                 <div class="compass-wrapper mx-auto"
                                     style="width: 200px; height: 200px; position: relative;">
                                     <svg viewBox="0 0 200 200" style="width: 100%; height: 100%;">
-                                        <rect x="0" y="0" width="100" height="100" fill="#dc3545" opacity="0.1" />
-                                        <rect x="100" y="0" width="100" height="100" fill="#0d6efd" opacity="0.1" />
-                                        <rect x="0" y="100" width="100" height="100" fill="#6f42c1" opacity="0.1" />
-                                        <rect x="100" y="100" width="100" height="100" fill="#198754" opacity="0.1" />
+                                        {{-- Cuadrantes con colores neutrales (sin asociación partidista) --}}
+                                        <rect x="0" y="0" width="100" height="100" fill="#e74c3c" opacity="0.08" />
+                                        <rect x="100" y="0" width="100" height="100" fill="#f39c12" opacity="0.08" />
+                                        <rect x="0" y="100" width="100" height="100" fill="#9b59b6" opacity="0.08" />
+                                        <rect x="100" y="100" width="100" height="100" fill="#3498db" opacity="0.08" />
+
+                                        {{-- Grid adicional para mejor referencia visual --}}
+                                        <line x1="50" y1="0" x2="50" y2="200" stroke="#dee2e6"
+                                            stroke-width="0.5" stroke-dasharray="4" />
+                                        <line x1="150" y1="0" x2="150" y2="200" stroke="#dee2e6"
+                                            stroke-width="0.5" stroke-dasharray="4" />
+                                        <line x1="0" y1="50" x2="200" y2="50" stroke="#dee2e6"
+                                            stroke-width="0.5" stroke-dasharray="4" />
+                                        <line x1="0" y1="150" x2="200" y2="150" stroke="#dee2e6"
+                                            stroke-width="0.5" stroke-dasharray="4" />
 
                                         <line x1="100" y1="0" x2="100" y2="200" stroke="#adb5bd"
                                             stroke-width="1" />
@@ -79,8 +90,11 @@
                                             stroke-width="2" />
 
                                         @php
-                                            $x = 100 + ($compassPosition['economic'] ?? 0);
-                                            $y = 100 - ($compassPosition['social'] ?? 0);
+                                            // Escalar valores (-100 a +100) al rango del SVG (10-190) para evitar bordes
+                                            $rawX = $compassPosition['economic'] ?? 0;
+                                            $rawY = $compassPosition['social'] ?? 0;
+                                            $x = 100 + $rawX * 0.9; // Máximo 190, mínimo 10
+                                            $y = 100 - $rawY * 0.9; // Máximo 190, mínimo 10
                                         @endphp
                                         <circle cx="{{ $x }}" cy="{{ $y }}" r="10" fill="#dc3545"
                                             opacity="0.3" />
@@ -98,6 +112,35 @@
                                         style="right: -45px; top: 50%; transform: translateY(-50%);">{{ __('test.compass_right') }}</span>
                                 </div>
 
+                                {{-- Leyenda de cuadrantes --}}
+                                <div class="compass-legend mt-4 small">
+                                    <div class="row g-1 text-center">
+                                        <div class="col-6">
+                                            <span class="d-inline-block rounded px-2 py-1"
+                                                style="background: #e74c3c20; font-size: 0.7rem;">
+                                                {{ __('test.compass_quadrant_left_progressive') }}
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="d-inline-block rounded px-2 py-1"
+                                                style="background: #f39c1220; font-size: 0.7rem;">
+                                                {{ __('test.compass_quadrant_right_progressive') }}
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="d-inline-block rounded px-2 py-1"
+                                                style="background: #9b59b620; font-size: 0.7rem;">
+                                                {{ __('test.compass_quadrant_left_conservative') }}
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="d-inline-block rounded px-2 py-1"
+                                                style="background: #3498db20; font-size: 0.7rem;">
+                                                {{ __('test.compass_quadrant_right_conservative') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mt-2">
                                     <span class="badge bg-secondary me-1">
                                         {{ __('test.economic') }}:
@@ -107,6 +150,11 @@
                                         {{ __('test.social') }}:
                                         {{ ($compassPosition['social'] ?? 0) > 0 ? '+' : '' }}{{ $compassPosition['social'] ?? 0 }}
                                     </span>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted fst-italic" style="font-size: 0.65rem;">
+                                        <i class="bi bi-info-circle me-1"></i>{{ __('test.compass_note') }}
+                                    </small>
                                 </div>
                             </div>
                         </div>

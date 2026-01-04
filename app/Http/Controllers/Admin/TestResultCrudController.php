@@ -36,6 +36,22 @@ class TestResultCrudController extends CrudController
             'function' => fn($entry) => $entry->answers()->count()
         ]);
         $this->crud->addColumn(['name' => 'region', 'label' => 'Región']);
+        
+        $this->crud->addColumn([
+            'name' => 'view_results',
+            'label' => 'Ver',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                if ($entry->is_completed && $entry->share_id) {
+                    $url = url('/r/' . $entry->share_id);
+                    return '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-outline-primary" title="Ver resultados">
+                        <i class="la la-external-link-alt"></i>
+                    </a>';
+                }
+                return '<span class="text-muted">-</span>';
+            },
+            'escaped' => false, // Importante para renderizar HTML
+        ]);
 
         $this->crud->addFilter([
             'name' => 'is_completed',

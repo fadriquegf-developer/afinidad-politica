@@ -68,6 +68,11 @@ return [
     'compass_center' => 'Centro',
     'economic' => 'Económico',
     'social' => 'Social',
+    'compass_quadrant_left_progressive' => 'Esq. Progresista',
+    'compass_quadrant_right_progressive' => 'Der. Progresista',
+    'compass_quadrant_left_conservative' => 'Esq. Conservador',
+    'compass_quadrant_right_conservative' => 'Der. Conservador',
+    'compass_note' => 'Esta brúxula non reflicte posicións sobre organización territorial.',
 
     // Radar
     'your_profile_by_category' => 'O teu perfil por categorías',
@@ -112,4 +117,10 @@ return [
 
     // Open Graph
     'og_description' => 'Descobre que partido político se aliña máis coas túas ideas. Test gratuíto e anónimo.',
+
+    'combined' => 'Combinada',
+    'profile_comparison' => 'Comparación de perfís',
+    'share_comparison_desc' => 'Envía esta ligazón para que outros vexan a comparación',
+    'take_test_again' => 'Facer test de novo',
+    'top_affinity' => 'Maior afinidade',
 ];
