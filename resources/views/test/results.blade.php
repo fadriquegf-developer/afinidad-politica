@@ -6,13 +6,13 @@
     <meta property="og:title"
         content="{{ __('test.og_result_title', ['party' => $ogData['party_short'], 'score' => $ogData['score']]) }}">
     <meta property="og:description" content="{{ __('test.og_result_description') }}">
-    <meta property="og:image" content="{{ asset('images/og_imagen.png') }}">
+    <meta property="og:image" content="{{ asset('images/og_imagen.webp') }}">
     <meta property="og:url" content="{{ route('test.shared', $shareId) }}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title"
         content="{{ __('test.og_result_title', ['party' => $ogData['party_short'], 'score' => $ogData['score']]) }}">
-    <meta name="twitter:image" content="{{ asset('images/og_imagen.png') }}">
+    <meta name="twitter:image" content="{{ asset('images/og_imagen.webp') }}">
 @endsection
 
 @php

@@ -133,4 +133,26 @@ return [
 
     'back_to_home' => 'Tornar a l\'inici',
     'language' => 'Idioma',
+
+    // Modes de test
+    'mode_quick' => 'Test Ràpid',
+    'mode_quick_time' => '~8 minuts',
+    'mode_quick_desc' => 'Respon només la teva opinió',
+    'mode_quick_ideal' => 'Ideal per curiosejar',
+    'start_quick' => 'Començar Ràpid',
+
+    'mode_complete' => 'Test Complet',
+    'mode_complete_time' => '~15 minuts',
+    'mode_complete_desc' => 'Respon i indica com t\'importa cada tema',
+    'mode_complete_ideal' => 'Ideal per decidir el teu vot',
+    'start_complete' => 'Començar Complet',
+
+    // Importància
+    'importance_question' => 'Com t\'importa aquest tema?',
+    'importance_1' => 'Gens',
+    'importance_2' => 'Poc',
+    'importance_3' => 'Normal',
+    'importance_4' => 'Bastant',
+    'importance_5' => 'Molt',
+    'importance_hint' => 'Els temes que més t\'importen pesaran més en el resultat final',
 ];

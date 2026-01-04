@@ -29,11 +29,36 @@ class TestController extends Controller
 
     public function start(Request $request)
     {
+        // Intentem obtenir la regió per IP (amb try-catch per si falla)
+        $region = null;
+        $city = null;
+
+        try {
+            $ip = $request->ip();
+
+            $position = \Stevebauman\Location\Facades\Location::get($ip);
+
+            if ($position) {
+                $region = $position->regionName;  // "Catalonia", "Valencia", etc.
+                $city = $position->cityName;      // "Barcelona", "Elche", etc.
+            }
+        } catch (\Exception $e) {
+            // Si falla la geolocalització, simplement continuem sense ella
+            \Log::warning('Geolocation failed: ' . $e->getMessage());
+        }
+
+        $request->validate([
+            'mode' => 'required|in:quick,complete',
+        ]);
+
         $testResult = TestResult::create([
             'session_id' => Str::uuid(),
+            'mode' => $request->mode,
             'share_id' => $this->generateShareId(),
             'ip_hash' => hash('sha256', $request->ip()),
             'user_agent' => $request->userAgent(),
+            'region' => $region,
+            'city' => $city,
         ]);
 
         $questions = Question::where('questions.is_active', true)
@@ -44,8 +69,10 @@ class TestController extends Controller
             ->select('questions.*')
             ->get();
 
+        // ✅ CORRECCIÓN: Añadir 'test_mode' a la sesión
         session([
             'test_id' => $testResult->id,
+            'test_mode' => $request->mode,  // <-- ESTA LÍNEA FALTABA
             'test_questions' => $questions->pluck('id')->toArray()
         ]);
 
@@ -65,6 +92,7 @@ class TestController extends Controller
     {
         $testId = session('test_id');
         $questionIds = session('test_questions');
+        $testMode = session('test_mode', 'quick');
 
         if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
@@ -86,21 +114,37 @@ class TestController extends Controller
 
         $answeredCount = TestAnswer::where('test_result_id', $testId)->count();
 
-        return view('test.question', compact('question', 'category', 'number', 'total', 'existingAnswer', 'answeredCount'));
+        return view('test.question', compact(
+            'question',
+            'category',
+            'number',
+            'total',
+            'existingAnswer',
+            'answeredCount',
+            'testMode'
+        ));
     }
 
     public function answer(Request $request, $number)
     {
         $testId = session('test_id');
         $questionIds = session('test_questions');
+        $testMode = session('test_mode', 'quick');
 
         if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
         }
 
-        $request->validate([
+        $rules = [
             'answer' => 'required|integer|min:0|max:5',
-        ]);
+        ];
+
+        // Solo validar importance en modo completo
+        if ($testMode === 'complete' && $request->answer != 0) {
+            $rules['importance'] = 'required|integer|min:1|max:5';
+        }
+
+        $request->validate($rules);
 
         $index = $number - 1;
         $questionId = $questionIds[$index];
@@ -110,9 +154,13 @@ class TestController extends Controller
                 ->where('question_id', $questionId)
                 ->delete();
         } else {
+            $importance = $testMode === 'complete'
+                ? $request->importance
+                : 3;  // Default para modo rápido
+
             TestAnswer::updateOrCreate(
                 ['test_result_id' => $testId, 'question_id' => $questionId],
-                ['answer' => $request->answer, 'importance' => $request->importance ?? 3]
+                ['answer' => $request->answer, 'importance' => $importance]
             );
         }
 
@@ -273,7 +321,6 @@ class TestController extends Controller
                 'topScore' => $results2[array_key_first($results2)] ?? 0,
             ];
 
-            // Calcular compatibilidad
             $compatibility = $this->calculateCompatibility($compass1, $compass2, $categoryScores1, $categoryScores2);
         }
 
@@ -289,18 +336,16 @@ class TestController extends Controller
     }
 
     /**
-     * Calcular compatibilidad entre dos usuarios
+     * Calcular compatibilidad entre dos perfiles
      */
     private function calculateCompatibility($compass1, $compass2, $cats1, $cats2): array
     {
-        // Distancia en la brújula (0-100, donde 100 = idénticos)
-        $dx = ($compass1['economic'] ?? 0) - ($compass2['economic'] ?? 0);
-        $dy = ($compass1['social'] ?? 0) - ($compass2['social'] ?? 0);
-        $distance = sqrt($dx * $dx + $dy * $dy);
-        $maxDistance = sqrt(200 * 200 + 200 * 200); // Diagonal máxima
-        $compassCompatibility = round((1 - ($distance / $maxDistance)) * 100);
+        // Diferencia en brújula (0-200 posible, normalizar a 0-100)
+        $compassDiffX = abs(($compass1['economic'] ?? 0) - ($compass2['economic'] ?? 0));
+        $compassDiffY = abs(($compass1['social'] ?? 0) - ($compass2['social'] ?? 0));
+        $compassCompatibility = round(100 - (($compassDiffX + $compassDiffY) / 4));
 
-        // Similitud por categorías
+        // Diferencia por categorías
         $categoryDiffs = [];
         $totalDiff = 0;
         $count = 0;
@@ -566,7 +611,8 @@ class TestController extends Controller
 
     public function restart()
     {
-        session()->forget(['test_id', 'test_questions']);
+        // ✅ CORRECCIÓN: Limpiar también test_mode
+        session()->forget(['test_id', 'test_questions', 'test_mode']);
         return redirect()->route('test.index');
     }
 }

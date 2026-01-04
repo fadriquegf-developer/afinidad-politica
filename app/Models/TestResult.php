@@ -11,12 +11,15 @@ class TestResult extends Model
 
     protected $fillable = [
         'session_id',
+        'mode',
         'share_id',
         'ip_hash',
         'user_agent',
+        'region',
+        'city',
         'results',
         'compass_position',
-        'category_scores', 
+        'category_scores',
         'top_party_id',
         'is_completed',
         'completed_at',

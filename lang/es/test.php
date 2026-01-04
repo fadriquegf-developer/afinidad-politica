@@ -133,4 +133,25 @@ return [
 
     'back_to_home' => 'Volver al inicio',
     'language' => 'Idioma',
+
+    // Modos de test
+    'mode_quick' => 'Test Rápido',
+    'mode_quick_time' => '~8 minutos',
+    'mode_quick_desc' => 'Responde solo tu opinión',
+    'mode_quick_ideal' => 'Ideal para curiosear',
+    'start_quick' => 'Comenzar Rápido',
+
+    'mode_complete' => 'Test Completo',
+    'mode_complete_time' => '~15 minutos',
+    'mode_complete_desc' => 'Responde e indica cuánto te importa cada tema',
+    'mode_complete_ideal' => 'Ideal para decidir tu voto',
+    'start_complete' => 'Comenzar Completo',
+
+    // Importancia
+    'importance_question' => '¿Cuánto te importa este tema?',
+    'importance_1' => 'Nada',
+    'importance_2' => 'Poco',
+    'importance_3' => 'Normal',
+    'importance_4' => 'Bastante',
+    'importance_5' => 'Mucho',
 ];

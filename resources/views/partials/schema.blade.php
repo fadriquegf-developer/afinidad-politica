@@ -21,11 +21,11 @@
         "@@type": "Organization",
         "name": "Afinidad Política",
         "url": "{{ url('/') }}",
-        "logo": "{{ asset('images/logo.png') }}"
+        "logo": "{{ asset('images/logo.webp') }}"
     },
     "datePublished": "2024-01-01",
     "dateModified": "{{ now()->format('Y-m-d') }}",
-    "screenshot": "{{ asset('images/og_imagen.png') }}",
+    "screenshot": "{{ asset('images/og_imagen.webp') }}",
     "featureList": [
         "Test de 10, 20 o 30 preguntas",
         "9 partidos políticos españoles",
@@ -45,7 +45,7 @@
     "@@type": "Organization",
     "name": "Afinidad Política",
     "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/logo.png') }}",
+    "logo": "{{ asset('images/logo.webp') }}",
     "contactPoint": {
         "@@type": "ContactPoint",
         "email": "contacto@afinidadpolitica.es",

@@ -133,4 +133,26 @@ return [
 
     'back_to_home' => 'Hasierara itzuli',
     'language' => 'Hizkuntza',
+
+    // Test moduak
+    'mode_quick' => 'Test Azkarra',
+    'mode_quick_time' => '~8 minutu',
+    'mode_quick_desc' => 'Zure iritzia bakarrik erantzun',
+    'mode_quick_ideal' => 'Kuriositatea asetzeko aproposa',
+    'start_quick' => 'Hasi Azkarra',
+
+    'mode_complete' => 'Test Osoa',
+    'mode_complete_time' => '~15 minutu',
+    'mode_complete_desc' => 'Erantzun eta adierazi gai bakoitza zenbat axola zaizun',
+    'mode_complete_ideal' => 'Zure botoa erabakitzeko aproposa',
+    'start_complete' => 'Hasi Osoa',
+
+    // Garrantzia
+    'importance_question' => 'Zenbat axola zaizu gai hau?',
+    'importance_1' => 'Batere ez',
+    'importance_2' => 'Gutxi',
+    'importance_3' => 'Arrunta',
+    'importance_4' => 'Nahiko',
+    'importance_5' => 'Asko',
+    'importance_hint' => 'Gehien axola zaizkizun gaiek pisu handiagoa izango dute azken emaitzetan',
 ];

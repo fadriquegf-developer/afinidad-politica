@@ -4,7 +4,7 @@
             {{-- Logo y descripción --}}
             <div class="col-lg-4 mb-3 mb-lg-0">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" height="40" class="me-2">
+                    <img src="{{ asset('images/logo.webp') }}" alt="{{ config('app.name') }}" height="40" class="me-2">
                     <span class="fw-bold text-white">{{ config('app.name') }}</span>
                 </div>
                 <p class="text-white-50 small mb-2">

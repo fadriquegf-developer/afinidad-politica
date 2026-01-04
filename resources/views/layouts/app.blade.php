@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>@yield('title', __('test.site_title')) - {{ config('app.name') }}</title>
-    
+
     {{-- Manifest --}}
     <link rel="manifest" href="/manifest.json">
 
@@ -62,7 +62,7 @@
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:title" content="{{ config('app.name') }} - {{ __('test.site_title') }}">
         <meta property="og:description" content="{{ __('test.og_description') }}">
-        <meta property="og:image" content="{{ asset('images/og_imagen.png') }}">
+        <meta property="og:image" content="{{ asset('images/og_imagen.webp') }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:locale" content="{{ app()->getLocale() }}_ES">
@@ -77,7 +77,7 @@
         <meta name="twitter:site" content="@afinidadpol">
         <meta name="twitter:title" content="{{ config('app.name') }} - {{ __('test.site_title') }}">
         <meta name="twitter:description" content="{{ __('test.og_description') }}">
-        <meta name="twitter:image" content="{{ asset('images/og_imagen.png') }}">
+        <meta name="twitter:image" content="{{ asset('images/og_imagen.webp') }}">
     @endif
 
     <!-- Google tag (gtag.js) -->
@@ -207,7 +207,7 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('test.index') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" height="40"
+                <img src="{{ asset('images/logo.webp') }}" alt="{{ config('app.name') }}" height="40"
                     class="me-2" loading="eager">
                 <span class="fw-bold d-none d-sm-inline">{{ config('app.name') }}</span>
             </a>
@@ -239,6 +239,9 @@
 
     {{-- Cookie Banner --}}
     @include('partials.cookie-banner')
+
+    {{-- Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {{-- JavaScript --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
