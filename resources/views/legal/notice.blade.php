@@ -1,97 +1,98 @@
 @extends('layouts.static')
 
-@section('title', __('legal.legal_notice_title'))
+@section('title', __('notice.title'))
 
 @section('static-content')
-    <h1 class="mb-4"><i class="bi bi-file-text me-2"></i>{{ __('legal.legal_notice_title') }}</h1>
+    <h1 class="mb-4"><i class="bi bi-file-text me-2"></i>{{ __('notice.title') }}</h1>
     
-    <p class="text-muted mb-4">{{ __('legal.last_updated') }}: {{ date('d/m/Y') }}</p>
+    <p class="text-muted mb-4">{{ __('notice.last_updated') }}: {{ date('d/m/Y') }}</p>
 
     <div class="legal-content">
-        <h2>1. Datos identificativos</h2>
-        <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa:</p>
+        <h2>1. {{ __('notice.identification_title') }}</h2>
+        <p>{{ __('notice.identification_intro') }}</p>
         
         <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <th>Titular</th>
+                    <th>{{ __('notice.holder') }}</th>
                     <td>Fadrique Garcia Font</td>
                 </tr>
                 <tr>
-                    <th>NIF/CIF</th>
+                    <th>{{ __('notice.nif') }}</th>
                     <td>41572677Q</td>
                 </tr>
                 <tr>
-                    <th>Domicilio</th>
+                    <th>{{ __('notice.address') }}</th>
                     <td>Carrer Alfabeguera 12</td>
                 </tr>
                 <tr>
-                    <th>Email</th>
+                    <th>{{ __('notice.email') }}</th>
                     <td><a href="mailto:contacto@afinidadpolitica.es">contacto@afinidadpolitica.es</a></td>
                 </tr>
                 <tr>
-                    <th>Sitio web</th>
+                    <th>{{ __('notice.website') }}</th>
                     <td><a href="https://afinidadpolitica.es">https://afinidadpolitica.es</a></td>
                 </tr>
             </tbody>
         </table>
 
-        <h2>2. Objeto del sitio web</h2>
-        <p><strong>Afinidad Política</strong> es una plataforma web de carácter informativo y educativo que permite a los usuarios conocer su afinidad ideológica con los principales partidos políticos españoles mediante un cuestionario anónimo.</p>
+        <h2>2. {{ __('notice.purpose_title') }}</h2>
+        <p>{!! __('notice.purpose_desc', ['site' => '<strong>Afinidad Política</strong>']) !!}</p>
         
         <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            <strong>Importante:</strong> Este sitio web NO tiene afiliación con ningún partido político, organización gubernamental ni grupo de interés. Su único objetivo es proporcionar información objetiva basada en los programas electorales públicos de los partidos.
+            <strong>{{ __('notice.important') }}:</strong> {{ __('notice.no_affiliation') }}
         </div>
 
-        <h2>3. Propiedad intelectual</h2>
-        <p>Todos los contenidos del sitio web, incluyendo textos, imágenes, diseño gráfico, código fuente, logotipos y demás elementos, son propiedad del titular o se utilizan con la debida autorización.</p>
-        <p>Queda prohibida la reproducción, distribución o transformación de estos contenidos sin autorización expresa, salvo para uso personal y privado.</p>
-        <p>Las marcas y logotipos de los partidos políticos mostrados pertenecen a sus respectivos titulares y se utilizan únicamente con fines informativos.</p>
+        <h2>3. {{ __('notice.intellectual_property_title') }}</h2>
+        <p>{{ __('notice.intellectual_property_ownership') }}</p>
+        <p>{{ __('notice.intellectual_property_prohibition') }}</p>
+        <p>{{ __('notice.intellectual_property_parties') }}</p>
 
-        <h2>4. Responsabilidad</h2>
-        <h3>4.1. Sobre los resultados del test</h3>
-        <p>Los resultados del test son meramente orientativos y se basan en el análisis de los programas electorales públicos. El titular:</p>
+        <h2>4. {{ __('notice.liability_title') }}</h2>
+        
+        <h3>4.1. {{ __('notice.liability_results_title') }}</h3>
+        <p>{{ __('notice.liability_results_intro') }}</p>
         <ul>
-            <li>No garantiza la exactitud absoluta de los resultados</li>
-            <li>No se hace responsable de las decisiones que los usuarios tomen basándose en dichos resultados</li>
-            <li>Recomienda contrastar la información con fuentes oficiales de los partidos</li>
+            <li>{{ __('notice.liability_results_accuracy') }}</li>
+            <li>{{ __('notice.liability_results_decisions') }}</li>
+            <li>{{ __('notice.liability_results_recommend') }}</li>
         </ul>
 
-        <h3>4.2. Sobre el funcionamiento</h3>
-        <p>El titular no garantiza la disponibilidad permanente del servicio y no será responsable de:</p>
+        <h3>4.2. {{ __('notice.liability_operation_title') }}</h3>
+        <p>{{ __('notice.liability_operation_intro') }}</p>
         <ul>
-            <li>Interrupciones del servicio por mantenimiento o causas técnicas</li>
-            <li>Daños derivados de virus o elementos lesivos</li>
-            <li>Uso indebido de la plataforma por parte de los usuarios</li>
+            <li>{{ __('notice.liability_operation_interruptions') }}</li>
+            <li>{{ __('notice.liability_operation_viruses') }}</li>
+            <li>{{ __('notice.liability_operation_misuse') }}</li>
         </ul>
 
-        <h2>5. Enlaces externos</h2>
-        <p>Este sitio puede contener enlaces a páginas web de terceros (partidos políticos, medios de comunicación, etc.). El titular no se hace responsable del contenido de dichas páginas externas.</p>
+        <h2>5. {{ __('notice.external_links_title') }}</h2>
+        <p>{{ __('notice.external_links_desc') }}</p>
 
-        <h2>6. Neutralidad política</h2>
-        <p>Este sitio web mantiene una estricta neutralidad política:</p>
+        <h2>6. {{ __('notice.neutrality_title') }}</h2>
+        <p>{{ __('notice.neutrality_intro') }}</p>
         <ul>
-            <li>No promociona ni favorece a ningún partido político</li>
-            <li>Las preguntas del test están diseñadas de forma neutral</li>
-            <li>Los algoritmos de cálculo tratan a todos los partidos por igual</li>
-            <li>No se acepta financiación de partidos políticos ni organizaciones afines</li>
+            <li>{{ __('notice.neutrality_no_promotion') }}</li>
+            <li>{{ __('notice.neutrality_neutral_questions') }}</li>
+            <li>{{ __('notice.neutrality_equal_treatment') }}</li>
+            <li>{{ __('notice.neutrality_no_funding') }}</li>
         </ul>
 
-        <h2>7. Condiciones de uso</h2>
-        <p>Al utilizar este sitio web, el usuario se compromete a:</p>
+        <h2>7. {{ __('notice.terms_title') }}</h2>
+        <p>{{ __('notice.terms_intro') }}</p>
         <ul>
-            <li>Hacer un uso lícito y de buena fe de la plataforma</li>
-            <li>No realizar acciones que puedan dañar, inutilizar o sobrecargar el sitio</li>
-            <li>No intentar acceder a áreas restringidas o manipular los sistemas</li>
-            <li>No utilizar los resultados con fines difamatorios o de manipulación</li>
+            <li>{{ __('notice.terms_lawful') }}</li>
+            <li>{{ __('notice.terms_no_damage') }}</li>
+            <li>{{ __('notice.terms_no_access') }}</li>
+            <li>{{ __('notice.terms_no_manipulation') }}</li>
         </ul>
 
-        <h2>8. Legislación aplicable</h2>
-        <p>Este aviso legal se rige por la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de [TU CIUDAD], con renuncia expresa a cualquier otro fuero.</p>
+        <h2>8. {{ __('notice.jurisdiction_title') }}</h2>
+        <p>{{ __('notice.jurisdiction_desc') }}</p>
 
-        <h2>9. Modificaciones</h2>
-        <p>El titular se reserva el derecho de modificar el presente aviso legal para adaptarlo a novedades legislativas o cambios en la actividad del sitio.</p>
+        <h2>9. {{ __('notice.modifications_title') }}</h2>
+        <p>{{ __('notice.modifications_desc') }}</p>
     </div>
 @endsection
 

@@ -6,21 +6,21 @@
             <div class="d-flex align-items-center">
                 <span class="me-3 fs-4">🍪</span>
                 <div>
-                    <p class="mb-1 small fw-medium">{{ __('legal.cookie_title') }}</p>
+                    <p class="mb-1 small fw-medium">{{ __('cookie.title') }}</p>
                     <p class="mb-0 small text-white-50">
-                        {{ __('legal.cookie_message_full') }}
+                        {{ __('cookie.message') }}
                         <a href="{{ route('legal.cookies') }}" class="text-white text-decoration-underline">
-                            {{ __('legal.cookie_more_info') }}
+                            {{ __('cookie.more_info') }}
                         </a>
                     </p>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-shrink-0">
                 <button type="button" class="btn btn-outline-light btn-sm" onclick="acceptCookies('essential')">
-                    {{ __('legal.cookie_reject_optional') }}
+                    {{ __('cookie.reject_optional') }}
                 </button>
                 <button type="button" class="btn btn-light btn-sm px-4" onclick="acceptCookies('all')">
-                    <i class="bi bi-check-lg me-1"></i>{{ __('legal.cookie_accept_all') }}
+                    <i class="bi bi-check-lg me-1"></i>{{ __('cookie.accept_all') }}
                 </button>
             </div>
         </div>
