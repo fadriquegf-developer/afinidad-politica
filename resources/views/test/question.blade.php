@@ -49,14 +49,14 @@
                         @endif
                     </div>
 
-                    {{-- Formulario único para respuesta e importancia --}}
+                    {{-- FORMULARIO ÚNICO para respuesta e importancia --}}
                     <form action="{{ route('test.answer', $number) }}" method="POST" id="answerForm">
                         @csrf
                         <input type="hidden" name="answer" id="answerInput" value="{{ $existingAnswer->answer ?? '' }}">
                         <input type="hidden" name="importance" id="importanceInput"
                             value="{{ $existingAnswer->importance ?? 3 }}">
 
-                        {{-- Respuestas con emojis --}}
+                        {{-- Respuestas con emojis - BOTONES, no forms --}}
                         <div class="d-flex justify-content-center gap-2 gap-md-3 mb-2 flex-wrap">
                             @php
                                 $emojis = [1 => '😠', 2 => '😕', 3 => '😐', 4 => '🙂', 5 => '😃'];
@@ -175,21 +175,25 @@
             selectedAnswer = value;
             document.getElementById('answerInput').value = value;
 
+            // Colores para cada botón
+            const colors = {
+                1: 'danger',
+                2: 'warning',
+                3: 'secondary',
+                4: 'info',
+                5: 'success'
+            };
+
             // Actualizar estilos de botones
             document.querySelectorAll('.btn-answer').forEach(btn => {
                 const btnValue = parseInt(btn.dataset.value);
-                const colors = {
-                    1: 'danger',
-                    2: 'warning',
-                    3: 'secondary',
-                    4: 'info',
-                    5: 'success'
-                };
                 const color = colors[btnValue];
 
+                // Resetear todos los botones
                 btn.classList.remove('active', `bg-${color}`, 'text-white');
                 btn.classList.add(`btn-outline-${color}`);
 
+                // Marcar el seleccionado
                 if (btnValue === value) {
                     btn.classList.remove(`btn-outline-${color}`);
                     btn.classList.add('active', `bg-${color}`, 'text-white');
@@ -200,10 +204,12 @@
             if (testMode === 'complete') {
                 document.getElementById('importanceSection').style.display = 'block';
                 // Scroll suave al selector de importancia
-                document.getElementById('importanceSection').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
+                setTimeout(() => {
+                    document.getElementById('importanceSection').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 100);
             } else {
                 // En modo rápido, enviar directamente
                 document.getElementById('answerForm').submit();

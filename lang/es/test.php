@@ -154,4 +154,5 @@ return [
     'importance_3' => 'Normal',
     'importance_4' => 'Bastante',
     'importance_5' => 'Mucho',
+    'importance_hint' => 'Los temas que más te importan pesarán más en el resultado final',
 ];
