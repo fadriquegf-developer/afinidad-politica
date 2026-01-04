@@ -11,6 +11,7 @@ return [
     'cookies_title' => 'Política de Cookies',
     'methodology_title' => 'Metodología',
     'about_title' => 'Sobre Nosotros',
+    'faqs' => 'Preguntas Frecuentes',
 
     // Común
     'last_updated' => 'Última actualización',

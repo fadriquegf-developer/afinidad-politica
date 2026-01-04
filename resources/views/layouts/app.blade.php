@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>@yield('title', __('test.site_title')) - {{ config('app.name') }}</title>
+    
+    {{-- Manifest --}}
+    <link rel="manifest" href="/manifest.json">
 
     {{-- SEO básico --}}
     <meta name="description" content="@yield('meta_description', __('test.og_description'))">
@@ -193,31 +196,7 @@
 
     @stack('styles')
 
-    {{-- Schema.org JSON-LD para SEO --}}
-    @php
-        $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'WebApplication',
-            'name' => config('app.name'),
-            'description' => __('test.og_description'),
-            'url' => url('/'),
-            'applicationCategory' => 'Utility',
-            'operatingSystem' => 'Web',
-            'offers' => [
-                '@type' => 'Offer',
-                'price' => '0',
-                'priceCurrency' => 'EUR',
-            ],
-            'author' => [
-                '@type' => 'Organization',
-                'name' => 'Afinidad Política',
-            ],
-            'inLanguage' => ['es', 'ca', 'eu', 'gl'],
-        ];
-    @endphp
-    <script type="application/ld+json">
-        {!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
-    </script>
+    @include('partials.schema')
 </head>
 
 <body>

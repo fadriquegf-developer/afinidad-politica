@@ -23,6 +23,7 @@ Route::get('/aviso-legal', [LegalController::class, 'notice'])->name('legal.noti
 Route::get('/cookies', [LegalController::class, 'cookies'])->name('legal.cookies');
 Route::get('/metodologia', [LegalController::class, 'methodology'])->name('legal.methodology');
 Route::get('/sobre-nosotros', [LegalController::class, 'about'])->name('legal.about');
+Route::get('/preguntas-frecuentes', [LegalController::class, 'faq'])->name('legal.faq');
 
 // Cambio de idioma
 Route::get('/lang/{locale}', function ($locale) {

@@ -52,6 +52,11 @@
                         </a>
                     </li>
                     <li class="mb-2">
+                        <a href="{{ route('legal.faq') }}" class="text-white-50 text-decoration-none small footer-link">
+                            {{ __('legal.faqs') }}
+                        </a>
+                    </li>
+                     <li class="mb-2">
                         <a href="{{ route('test.index') }}" class="text-white-50 text-decoration-none small footer-link">
                             {{ __('test.start_test') }}
                         </a>

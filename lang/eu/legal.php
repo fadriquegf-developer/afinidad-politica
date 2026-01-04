@@ -11,6 +11,7 @@ return [
     'cookies_title' => 'Cookie Politika',
     'methodology_title' => 'Metodologia',
     'about_title' => 'Guri Buruz',
+    'faqs' => 'Maiz Egiten Diren Galderak',
 
     // Común
     'last_updated' => 'Azken eguneratzea',

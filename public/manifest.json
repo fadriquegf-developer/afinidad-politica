@@ -1,0 +1,25 @@
+{
+    "name": "Test de Afinidad Política España",
+    "short_name": "Test Político",
+    "description": "Descubre qué partido político español se alinea más con tus ideas",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#667eea",
+    "theme_color": "#667eea",
+    "orientation": "portrait-primary",
+    "lang": "es-ES",
+    "categories": ["education", "politics"],
+    "icons": [
+        {
+            "src": "/favicon/favicon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/favicon-196x196.png",
+            "sizes": "196x196",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

@@ -45,4 +45,12 @@ class LegalController extends Controller
     {
         return view('legal.about');
     }
+
+    /**
+     * FAQs
+     */
+    public function faq()
+    {
+        return view('legal.faq');
+    }
 }
