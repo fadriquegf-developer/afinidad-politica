@@ -123,4 +123,11 @@ return [
     'share_comparison_desc' => 'Bidali esteka hau besteek konparaketa ikus dezaten',
     'take_test_again' => 'Testa berriro egin',
     'top_affinity' => 'Afinitate handiena',
+
+    'site_title' => 'Afinitate Politikoaren Testa',
+    'og_description' => 'Ezagutu zein alderdi politiko lerrokatzen den gehien zure ideiekin. Test doakoa eta anonimoa.',
+    'og_result_title' => 'Nire afinitatea :party da (:score%)',
+    'og_result_description' => 'Afinitate Politikoaren Testa egin dut. Ezagutu zurea!',
+    'welcome_title' => 'Zein alderdi lerrokatzen da zurekin?',
+    'welcome_description' => 'Erantzun gai politikoei buruzko galderak eta ezagutu zein alderdi espainiar hurbiltzen diren gehien zure ideietara. Anonimoa, doakoa eta neutrala.',
 ];

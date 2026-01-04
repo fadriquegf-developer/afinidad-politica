@@ -123,4 +123,11 @@ return [
     'share_comparison_desc' => 'Envia aquest enllaç perquè altres vegin la comparació',
     'take_test_again' => 'Fer test de nou',
     'top_affinity' => 'Major afinitat',
+
+    'site_title' => 'Test d\'Afinitat Política',
+    'og_description' => 'Descobreix quin partit polític s\'alinea més amb les teves idees. Test gratuït i anònim.',
+    'og_result_title' => 'La meva afinitat és :party (:score%)',
+    'og_result_description' => 'He fet el Test d\'Afinitat Política. Descobreix el teu!',
+    'welcome_title' => 'Quin partit s\'alinea amb tu?',
+    'welcome_description' => 'Respon preguntes sobre temes polítics i descobreix quins partits espanyols s\'acosten més a les teves idees. Anònim, gratuït i neutral.',
 ];

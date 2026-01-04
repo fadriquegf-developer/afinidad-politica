@@ -44,7 +44,7 @@
         <meta name="twitter:description" content="{{ __('test.og_description') }}">
         <meta name="twitter:image" content="{{ asset('images/og_imagen.png') }}">
     @endif
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -108,15 +108,21 @@
 
 <body>
     <div class="container py-4">
-        <div class="lang-switcher text-end mb-3">
-            <a href="{{ route('lang.switch', 'es') }}"
-                class="badge bg-light text-dark {{ app()->getLocale() == 'es' ? 'active' : '' }}">ES</a>
-            <a href="{{ route('lang.switch', 'ca') }}"
-                class="badge bg-light text-dark {{ app()->getLocale() == 'ca' ? 'active' : '' }}">CA</a>
-            <a href="{{ route('lang.switch', 'eu') }}"
-                class="badge bg-light text-dark {{ app()->getLocale() == 'eu' ? 'active' : '' }}">EU</a>
-            <a href="{{ route('lang.switch', 'gl') }}"
-                class="badge bg-light text-dark {{ app()->getLocale() == 'gl' ? 'active' : '' }}">GL</a>
+        {{-- Header con logo y selector de idioma --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{{ route('test.index') }}" class="text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" height="50">
+            </a>
+            <div class="lang-switcher">
+                <a href="{{ route('lang.switch', 'es') }}"
+                    class="badge bg-light text-dark {{ app()->getLocale() == 'es' ? 'active' : '' }}">ES</a>
+                <a href="{{ route('lang.switch', 'ca') }}"
+                    class="badge bg-light text-dark {{ app()->getLocale() == 'ca' ? 'active' : '' }}">CA</a>
+                <a href="{{ route('lang.switch', 'eu') }}"
+                    class="badge bg-light text-dark {{ app()->getLocale() == 'eu' ? 'active' : '' }}">EU</a>
+                <a href="{{ route('lang.switch', 'gl') }}"
+                    class="badge bg-light text-dark {{ app()->getLocale() == 'gl' ? 'active' : '' }}">GL</a>
+            </div>
         </div>
         @yield('content')
     </div>

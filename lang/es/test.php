@@ -123,4 +123,11 @@ return [
     'share_comparison_desc' => 'Envía este enlace para que otros vean la comparación',
     'take_test_again' => 'Hacer test de nuevo',
     'top_affinity' => 'Mayor afinidad',
+
+    'site_title' => 'Test de Afinidad Política',
+    'og_description' => 'Descubre qué partido político se alinea más con tus ideas. Test gratuito y anónimo.',
+    'og_result_title' => 'Mi afinidad es :party (:score%)',
+    'og_result_description' => 'He hecho el Test de Afinidad Política. ¡Descubre el tuyo!',
+    'welcome_title' => '¿Qué partido se alinea contigo?',
+    'welcome_description' => 'Responde preguntas sobre temas políticos y descubre qué partidos españoles se acercan más a tus ideas. Anónimo, gratuito y neutral.',
 ];

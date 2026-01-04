@@ -2,22 +2,17 @@
 
 @section('title', __('test.results_title') . ' - ' . $ogData['party_name'])
 
-@section('og_meta')
-    {{-- Open Graph para compartir en redes sociales --}}
-    <meta property="og:title" content="🗳️ Mi resultado: {{ $ogData['party_name'] }} ({{ $ogData['score'] }}%)">
-    <meta property="og:description"
-        content="He hecho el Test de Afinidad Política. Mi posición: {{ $ogData['compass_x'] > 0 ? 'Derecha' : ($ogData['compass_x'] < 0 ? 'Izquierda' : 'Centro') }} {{ $ogData['compass_y'] > 0 ? 'Progresista' : ($ogData['compass_y'] < 0 ? 'Conservador' : '') }}. ¡Descubre tu afinidad!">
-    <meta property="og:type" content="website">
+@section('og')
+    <meta property="og:title"
+        content="{{ __('test.og_result_title', ['party' => $ogData['party_short'], 'score' => $ogData['score']]) }}">
+    <meta property="og:description" content="{{ __('test.og_result_description') }}">
+    <meta property="og:image" content="{{ asset('images/og_imagen.png') }}">
     <meta property="og:url" content="{{ route('test.shared', $shareId) }}">
-    <meta property="og:image" content="{{ asset('images/og-test-politico.png') }}">
-    <meta property="og:site_name" content="{{ config('app.name') }}">
-
-    {{-- Twitter Card --}}
+    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="🗳️ Mi resultado: {{ $ogData['party_name'] }} ({{ $ogData['score'] }}%)">
-    <meta name="twitter:description"
-        content="Test de Afinidad Política - ¡Descubre qué partido se alinea más con tus ideas!">
-    <meta name="twitter:image" content="{{ asset('images/og-test-politico.png') }}">
+    <meta name="twitter:title"
+        content="{{ __('test.og_result_title', ['party' => $ogData['party_short'], 'score' => $ogData['score']]) }}">
+    <meta name="twitter:image" content="{{ asset('images/og_imagen.png') }}">
 @endsection
 
 @php

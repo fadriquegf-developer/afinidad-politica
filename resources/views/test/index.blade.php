@@ -7,7 +7,12 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body p-4 p-md-5">
+                    {{-- Hero Section con imagen --}}
                     <div class="text-center mb-5">
+                        <img src="{{ asset('images/hero_banner.png') }}" alt="{{ __('test.title') }}"
+                            class="img-fluid mb-4 rounded-3 shadow-sm"
+                            style="max-height: 200px; object-fit: cover; width: 100%;">
+
                         <h1 class="display-5 fw-bold text-dark mb-3">
                             🗳️ {{ __('test.title') }}
                         </h1>
