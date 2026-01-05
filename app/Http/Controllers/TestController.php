@@ -13,6 +13,21 @@ use Illuminate\Support\Str;
 
 class TestController extends Controller
 {
+    /**
+     * Cache para las polaridades de las preguntas (evita consultas repetidas)
+     */
+    private array $questionPolarityCache = [];
+
+    /**
+     * IDs de partidos de izquierda para cálculo de polaridad
+     */
+    private ?array $leftPartyIds = null;
+
+    /**
+     * IDs de partidos de derecha para cálculo de polaridad
+     */
+    private ?array $rightPartyIds = null;
+
     public function index()
     {
         $totalQuestions = Question::where('is_active', true)->count();
@@ -29,21 +44,18 @@ class TestController extends Controller
 
     public function start(Request $request)
     {
-        // Intentem obtenir la regió per IP (amb try-catch per si falla)
         $region = null;
         $city = null;
 
         try {
             $ip = $request->ip();
-
             $position = \Stevebauman\Location\Facades\Location::get($ip);
 
             if ($position) {
-                $region = $position->regionName;  // "Catalonia", "Valencia", etc.
-                $city = $position->cityName;      // "Barcelona", "Elche", etc.
+                $region = $position->regionName;
+                $city = $position->cityName;
             }
         } catch (\Exception $e) {
-            // Si falla la geolocalització, simplement continuem sense ella
             \Log::warning('Geolocation failed: ' . $e->getMessage());
         }
 
@@ -66,62 +78,47 @@ class TestController extends Controller
             ->where('categories.is_active', true)
             ->orderBy('categories.order')
             ->orderBy('questions.order')
-            ->select('questions.*')
-            ->get();
+            ->select('questions.id')
+            ->pluck('id')
+            ->toArray();
 
-        // ✅ CORRECCIÓN: Añadir 'test_mode' a la sesión
         session([
             'test_id' => $testResult->id,
-            'test_mode' => $request->mode,  // <-- ESTA LÍNEA FALTABA
-            'test_questions' => $questions->pluck('id')->toArray()
+            'test_questions' => $questions,
+            'test_mode' => $request->mode,
         ]);
 
         return redirect()->route('test.question', 1);
-    }
-
-    private function generateShareId(): string
-    {
-        do {
-            $shareId = Str::random(10);
-        } while (TestResult::where('share_id', $shareId)->exists());
-
-        return $shareId;
     }
 
     public function question($number)
     {
         $testId = session('test_id');
         $questionIds = session('test_questions');
-        $testMode = session('test_mode', 'quick');
 
         if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
         }
 
-        $total = count($questionIds);
         $index = $number - 1;
-
-        if ($index < 0 || $index >= $total) {
+        if ($index < 0 || $index >= count($questionIds)) {
             return redirect()->route('test.results');
         }
 
         $question = Question::with('category')->findOrFail($questionIds[$index]);
-        $category = $question->category;
-
         $existingAnswer = TestAnswer::where('test_result_id', $testId)
             ->where('question_id', $question->id)
             ->first();
 
+        $total = count($questionIds);
         $answeredCount = TestAnswer::where('test_result_id', $testId)->count();
 
         return view('test.question', compact(
             'question',
-            'category',
             'number',
             'total',
             'existingAnswer',
-            'answeredCount',
-            'testMode'
+            'answeredCount'
         ));
     }
 
@@ -129,34 +126,25 @@ class TestController extends Controller
     {
         $testId = session('test_id');
         $questionIds = session('test_questions');
-        $testMode = session('test_mode', 'quick');
+        $testMode = session('test_mode');
 
         if (!$testId || !$questionIds) {
             return redirect()->route('test.index');
         }
 
-        $rules = [
-            'answer' => 'required|integer|min:0|max:5',
-        ];
-
-        // Solo validar importance en modo completo
-        if ($testMode === 'complete' && $request->answer != 0) {
-            $rules['importance'] = 'required|integer|min:1|max:5';
+        $index = $number - 1;
+        if ($index < 0 || $index >= count($questionIds)) {
+            return redirect()->route('test.results');
         }
 
-        $request->validate($rules);
-
-        $index = $number - 1;
         $questionId = $questionIds[$index];
 
-        if ($request->answer == 0) {
-            TestAnswer::where('test_result_id', $testId)
-                ->where('question_id', $questionId)
-                ->delete();
-        } else {
-            $importance = $testMode === 'complete'
+        if ($request->has('answer')) {
+            $request->validate(['answer' => 'required|integer|min:1|max:5']);
+
+            $importance = ($testMode === 'complete' && $request->has('importance'))
                 ? $request->importance
-                : 3;  // Default para modo rápido
+                : 3;
 
             TestAnswer::updateOrCreate(
                 ['test_result_id' => $testId, 'question_id' => $questionId],
@@ -208,9 +196,6 @@ class TestController extends Controller
         return redirect()->route('test.shared', $testResult->share_id);
     }
 
-    /**
-     * Mostrar resultados por URL compartible (pública)
-     */
     public function shared($shareId)
     {
         $testResult = TestResult::where('share_id', $shareId)
@@ -241,7 +226,6 @@ class TestController extends Controller
         $answeredCount = $answers->count();
         $totalQuestions = Question::where('is_active', true)->count();
 
-        // Datos para Open Graph
         $topPartyId = array_key_first($results);
         $ogData = [
             'party_name' => $parties[$topPartyId]->name ?? 'Desconocido',
@@ -267,9 +251,6 @@ class TestController extends Controller
         ));
     }
 
-    /**
-     * Comparador de dos resultados
-     */
     public function compare($shareId1, $shareId2 = null)
     {
         $test1 = TestResult::where('share_id', $shareId1)
@@ -286,7 +267,6 @@ class TestController extends Controller
         $parties = Party::where('is_active', true)->get()->keyBy('id');
         $categories = Category::where('is_active', true)->orderBy('order')->get();
 
-        // Procesar datos del test 1
         $results1 = is_array($test1->results) ? $test1->results : json_decode($test1->results, true);
         $compass1 = is_array($test1->compass_position) ? $test1->compass_position : json_decode($test1->compass_position, true);
         $categoryScores1 = is_array($test1->category_scores) ? $test1->category_scores : json_decode($test1->category_scores, true);
@@ -335,163 +315,97 @@ class TestController extends Controller
         ));
     }
 
+    // =========================================================================
+    // MÉTODOS PRIVADOS - CÁLCULOS
+    // =========================================================================
+
     /**
-     * Calcular compatibilidad entre dos perfiles
+     * Inicializar IDs de partidos de referencia para cálculo de polaridad.
+     * Se ejecuta una sola vez y se cachea.
      */
-    private function calculateCompatibility($compass1, $compass2, $cats1, $cats2): array
+    private function initPartyReferences(): void
     {
-        // Diferencia en brújula (0-200 posible, normalizar a 0-100)
-        $compassDiffX = abs(($compass1['economic'] ?? 0) - ($compass2['economic'] ?? 0));
-        $compassDiffY = abs(($compass1['social'] ?? 0) - ($compass2['social'] ?? 0));
-        $compassCompatibility = round(100 - (($compassDiffX + $compassDiffY) / 4));
+        if ($this->leftPartyIds === null) {
+            // Partidos de izquierda económica / progresistas socialmente
+            $this->leftPartyIds = Party::whereIn('slug', ['psoe', 'sumar', 'bildu', 'erc'])
+                ->pluck('id')
+                ->toArray();
 
-        // Diferencia por categorías
-        $categoryDiffs = [];
-        $totalDiff = 0;
-        $count = 0;
-
-        foreach ($cats1 ?? [] as $catId => $score1) {
-            $score2 = $cats2[$catId] ?? 50;
-            $diff = abs($score1 - $score2);
-            $categoryDiffs[$catId] = 100 - $diff;
-            $totalDiff += $diff;
-            $count++;
+            // Partidos de derecha económica / conservadores socialmente
+            $this->rightPartyIds = Party::whereIn('slug', ['pp', 'vox', 'alianca-catalana'])
+                ->pluck('id')
+                ->toArray();
         }
-
-        $categoryCompatibility = $count > 0 ? round(100 - ($totalDiff / $count)) : 50;
-
-        // Puntuación global (promedio ponderado)
-        $overall = round(($compassCompatibility * 0.4) + ($categoryCompatibility * 0.6));
-
-        // Determinar nivel
-        $level = match (true) {
-            $overall >= 80 => ['text' => '¡Muy compatibles!', 'emoji' => '💚', 'class' => 'success'],
-            $overall >= 60 => ['text' => 'Bastante compatibles', 'emoji' => '💛', 'class' => 'warning'],
-            $overall >= 40 => ['text' => 'Algunas diferencias', 'emoji' => '🧡', 'class' => 'info'],
-            default => ['text' => 'Visiones distintas', 'emoji' => '💜', 'class' => 'secondary'],
-        };
-
-        return [
-            'overall' => $overall,
-            'compass' => $compassCompatibility,
-            'categories' => $categoryCompatibility,
-            'categoryDetails' => $categoryDiffs,
-            'level' => $level,
-        ];
     }
 
     /**
-     * Calcular puntuaciones por categoría (para el radar)
-     */
-    private function calculateCategoryScores($answers): array
-    {
-        $categories = Category::where('is_active', true)->get()->keyBy('id');
-        $scores = [];
-
-        foreach ($categories as $catId => $category) {
-            $catAnswers = $answers->filter(fn($a) => $a->question->category_id == $catId);
-
-            if ($catAnswers->count() > 0) {
-                // Convertir respuestas 1-5 a escala 0-100
-                $avgAnswer = $catAnswers->avg('answer');
-                $scores[$catId] = round((($avgAnswer - 1) / 4) * 100);
-            }
-        }
-
-        return $scores;
-    }
-
-    /**
-     * Calcular afinidad con cada partido usando algoritmo mejorado.
+     * Calcular la polaridad de una pregunta basándose en las posiciones de los partidos.
      * 
-     * Mejoras implementadas:
-     * 1. Escala cuadrática: (4-diff)² penaliza más las grandes diferencias
-     * 2. Factor de convicción: opiniones extremas (1,5) tienen más peso que moderadas (2,4)
-     * 3. Reducción de neutrales: respuestas "3" tienen 50% menos peso
+     * LÓGICA:
+     * - Si los partidos de izquierda tienen posiciones más altas → responder alto = izquierda → polaridad -1
+     * - Si los partidos de derecha tienen posiciones más altas → responder alto = derecha → polaridad +1
+     * 
+     * @param int $questionId
+     * @return int 1 o -1
      */
-    private function calculateResults($answers): array
+    private function calculateQuestionPolarity(int $questionId): int
     {
-        $parties = Party::where('is_active', true)->get();
-        $results = [];
-
-        foreach ($parties as $party) {
-            $totalScore = 0;
-            $maxScore = 0;
-
-            foreach ($answers as $answer) {
-                $position = PartyPosition::where('party_id', $party->id)
-                    ->where('question_id', $answer->question_id)
-                    ->first();
-
-                if ($position) {
-                    $diff = abs($answer->answer - $position->position);
-                    $importance = $answer->importance ?? 3;
-
-                    // MEJORA 1: Escala cuadrática - penaliza más las grandes diferencias
-                    // diff 0 → 16 puntos (100%), diff 1 → 9 (56%), diff 2 → 4 (25%), diff 3 → 1 (6%), diff 4 → 0
-                    $baseScore = pow(4 - $diff, 2);
-                    $maxBaseScore = 16; // (4-0)² = 16
-
-                    // MEJORA 2: Factor de convicción - opiniones fuertes pesan más
-                    // Respuesta 1 o 5 (extrema) → factor 1.0
-                    // Respuesta 2 o 4 (moderada) → factor 0.75
-                    // Respuesta 3 (neutral) → factor 0.5
-                    $distanceFromCenter = abs($answer->answer - 3); // 0, 1, o 2
-                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25); // 0.5, 0.75, o 1.0
-
-                    // MEJORA 3: Reducción de neutrales (ya incluida en convictionFactor)
-                    // Las respuestas neutrales (3) ya tienen factor 0.5
-
-                    // Peso final combinado
-                    $weight = $position->weight * $importance * $convictionFactor;
-
-                    $totalScore += $baseScore * $weight;
-                    $maxScore += $maxBaseScore * $weight;
-                }
-            }
-
-            $results[$party->id] = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
+        // Usar cache para evitar consultas repetidas
+        if (isset($this->questionPolarityCache[$questionId])) {
+            return $this->questionPolarityCache[$questionId];
         }
 
-        arsort($results);
+        $this->initPartyReferences();
 
-        return [
-            'results' => $results,
-            'topPartyId' => array_key_first($results),
-        ];
+        $positions = PartyPosition::where('question_id', $questionId)->get();
+
+        if ($positions->isEmpty()) {
+            $this->questionPolarityCache[$questionId] = 1;
+            return 1;
+        }
+
+        $leftSum = 0;
+        $leftCount = 0;
+        $rightSum = 0;
+        $rightCount = 0;
+
+        foreach ($positions as $position) {
+            if (in_array($position->party_id, $this->leftPartyIds)) {
+                $leftSum += $position->position;
+                $leftCount++;
+            } elseif (in_array($position->party_id, $this->rightPartyIds)) {
+                $rightSum += $position->position;
+                $rightCount++;
+            }
+        }
+
+        $leftAvg = $leftCount > 0 ? $leftSum / $leftCount : 3;
+        $rightAvg = $rightCount > 0 ? $rightSum / $rightCount : 3;
+
+        // Si izquierda tiene posiciones más altas, la polaridad es inversa
+        $polarity = ($leftAvg > $rightAvg) ? -1 : 1;
+
+        $this->questionPolarityCache[$questionId] = $polarity;
+        return $polarity;
     }
 
+    /**
+     * Calcular posición en la brújula política.
+     * 
+     * VERSIÓN CORREGIDA: Ahora considera la polaridad de cada pregunta
+     * para determinar correctamente si una respuesta indica izquierda o derecha.
+     */
     private function calculateCompassPosition($answers): array
     {
         $economicCategories = [
-            'economía',
-            'economia',
-            'fiscalidad',
-            'empleo',
-            'trabajo',
-            'vivienda',
-            'pensiones',
-            'bienestar',
-            'agricultura',
-            'rural'
+            'economía', 'economia', 'fiscalidad', 'empleo', 'trabajo',
+            'vivienda', 'pensiones', 'bienestar', 'agricultura', 'rural'
         ];
 
         $socialCategories = [
-            'social',
-            'inmigración',
-            'inmigracion',
-            'seguridad',
-            'justicia',
-            'instituciones',
-            'monarquía',
-            'monarquia',
-            'educación',
-            'educacion',
-            'sanidad',
-            'medio ambiente',
-            'medioambiente',
-            'igualdad',
-            'derechos'
+            'social', 'inmigración', 'inmigracion', 'seguridad', 'justicia',
+            'instituciones', 'monarquía', 'monarquia', 'educación', 'educacion',
+            'sanidad', 'medio ambiente', 'medioambiente', 'igualdad', 'derechos'
         ];
 
         $economicScores = [];
@@ -502,10 +416,16 @@ class TestController extends Controller
                 continue;
             }
 
+            // ✅ CORRECCIÓN: Obtener la polaridad de esta pregunta específica
+            $polarity = $this->calculateQuestionPolarity($answer->question_id);
+
             $categoryName = strtolower($answer->question->category->name);
             $categorySlug = strtolower($answer->question->category->slug ?? '');
 
-            $normalizedScore = (($answer->answer - 3) / 2) * 100;
+            // ✅ CORRECCIÓN: Aplicar la polaridad al score normalizado
+            // Si polarity = -1 y usuario responde 5 → score = -100 (izquierda)
+            // Si polarity = +1 y usuario responde 5 → score = +100 (derecha)
+            $normalizedScore = (($answer->answer - 3) / 2) * 100 * $polarity;
 
             $isEconomic = false;
             $isSocial = false;
@@ -537,27 +457,91 @@ class TestController extends Controller
             }
         }
 
-        $economicPosition = count($economicScores) > 0
-            ? round(array_sum($economicScores) / count($economicScores), 1)
-            : 0;
-
-        $socialPosition = count($socialScores) > 0
-            ? round(array_sum($socialScores) / count($socialScores), 1)
-            : 0;
-
         return [
-            'economic' => $economicPosition,
-            'social' => $socialPosition,
+            'economic' => count($economicScores) > 0
+                ? round(array_sum($economicScores) / count($economicScores), 1)
+                : 0,
+            'social' => count($socialScores) > 0
+                ? round(array_sum($socialScores) / count($socialScores), 1)
+                : 0,
         ];
     }
 
-    private function getPartyMatches($answers, $parties): array
+    /**
+     * Calcular compatibilidad entre dos perfiles
+     */
+    private function calculateCompatibility($compass1, $compass2, $cats1, $cats2): array
     {
-        $partyMatches = [];
+        $compassDiffX = abs(($compass1['economic'] ?? 0) - ($compass2['economic'] ?? 0));
+        $compassDiffY = abs(($compass1['social'] ?? 0) - ($compass2['social'] ?? 0));
+        $compassCompatibility = round(100 - (($compassDiffX + $compassDiffY) / 4));
+
+        $categoryDiffs = [];
+        $totalDiff = 0;
+        $count = 0;
+
+        foreach ($cats1 ?? [] as $catId => $score1) {
+            $score2 = $cats2[$catId] ?? 50;
+            $diff = abs($score1 - $score2);
+            $categoryDiffs[$catId] = 100 - $diff;
+            $totalDiff += $diff;
+            $count++;
+        }
+
+        $categoryCompatibility = $count > 0 ? round(100 - ($totalDiff / $count)) : 50;
+        $overall = round(($compassCompatibility * 0.4) + ($categoryCompatibility * 0.6));
+
+        $level = match (true) {
+            $overall >= 80 => ['text' => '¡Muy compatibles!', 'emoji' => '💚', 'class' => 'success'],
+            $overall >= 60 => ['text' => 'Bastante compatibles', 'emoji' => '💛', 'class' => 'warning'],
+            $overall >= 40 => ['text' => 'Algunas diferencias', 'emoji' => '🧡', 'class' => 'info'],
+            default => ['text' => 'Visiones distintas', 'emoji' => '💜', 'class' => 'secondary'],
+        };
+
+        return [
+            'overall' => $overall,
+            'compass' => $compassCompatibility,
+            'categories' => $categoryCompatibility,
+            'categoryDetails' => $categoryDiffs,
+            'level' => $level,
+        ];
+    }
+
+    /**
+     * Calcular puntuaciones por categoría (para el radar)
+     * 
+     * NOTA: Este método también debería considerar la polaridad,
+     * pero por simplicidad mantenemos el comportamiento actual.
+     * Si quieres consistencia total, aplica la misma lógica aquí.
+     */
+    private function calculateCategoryScores($answers): array
+    {
+        $categories = Category::where('is_active', true)->get()->keyBy('id');
+        $scores = [];
+
+        foreach ($categories as $catId => $category) {
+            $catAnswers = $answers->filter(fn($a) => $a->question->category_id == $catId);
+
+            if ($catAnswers->count() > 0) {
+                $avgAnswer = $catAnswers->avg('answer');
+                $scores[$catId] = round((($avgAnswer - 1) / 4) * 100);
+            }
+        }
+
+        return $scores;
+    }
+
+    /**
+     * Calcular afinidad con cada partido usando algoritmo mejorado.
+     */
+    private function calculateResults($answers): array
+    {
+        $parties = Party::where('is_active', true)->get();
+        $results = [];
 
         foreach ($parties as $party) {
-            $matches = [];
-            $divergences = [];
+            $totalScore = 0;
+            $maxScore = 0;
 
             foreach ($answers as $answer) {
                 $position = PartyPosition::where('party_id', $party->id)
@@ -566,38 +550,71 @@ class TestController extends Controller
 
                 if ($position) {
                     $diff = abs($answer->answer - $position->position);
-                    $matchPercent = round(pow(4 - $diff, 2) / 16 * 100);
+                    $importance = $answer->importance ?? 3;
 
-                    $questionData = [
-                        'question' => $answer->question->text,
-                        'category' => $answer->question->category->name ?? '-',
-                        'user_answer' => $answer->answer,
-                        'party_position' => $position->position,
-                        'match_percent' => $matchPercent,
-                    ];
+                    $baseScore = pow(4 - $diff, 2);
+                    $maxBaseScore = 16;
+
+                    $distanceFromCenter = abs($answer->answer - 3);
+                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25);
+
+                    $weight = $position->weight * $importance * $convictionFactor;
+
+                    $totalScore += $baseScore * $weight;
+                    $maxScore += $maxBaseScore * $weight;
+                }
+            }
+
+            $results[$party->id] = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
+        }
+
+        arsort($results);
+
+        return [
+            'results' => $results,
+            'topPartyId' => array_key_first($results),
+        ];
+    }
+
+    /**
+     * Obtener coincidencias y divergencias con cada partido
+     */
+    private function getPartyMatches($answers, $parties): array
+    {
+        $matches = [];
+
+        foreach ($parties as $party) {
+            $agreements = [];
+            $disagreements = [];
+
+            foreach ($answers as $answer) {
+                $position = PartyPosition::where('party_id', $party->id)
+                    ->where('question_id', $answer->question_id)
+                    ->first();
+
+                if ($position) {
+                    $diff = abs($answer->answer - $position->position);
+                    $questionText = $answer->question->text;
 
                     if ($diff <= 1) {
-                        $matches[] = $questionData;
+                        $agreements[] = $questionText;
                     } elseif ($diff >= 3) {
-                        $divergences[] = $questionData;
+                        $disagreements[] = $questionText;
                     }
                 }
             }
 
-            usort($matches, fn($a, $b) => $b['match_percent'] <=> $a['match_percent']);
-            usort($divergences, fn($a, $b) => $a['match_percent'] <=> $b['match_percent']);
-
-            $partyMatches[$party->id] = [
-                'matches' => array_slice($matches, 0, 5),
-                'divergences' => array_slice($divergences, 0, 5)
+            $matches[$party->id] = [
+                'agreements' => array_slice($agreements, 0, 3),
+                'disagreements' => array_slice($disagreements, 0, 3),
             ];
         }
 
-        return $partyMatches;
+        return $matches;
     }
 
     /**
-     * Calcular resultados por categoría usando el mismo algoritmo mejorado.
+     * Obtener resultados por categoría
      */
     private function getResultsByCategory($answers, $parties, $categories): array
     {
@@ -621,7 +638,6 @@ class TestController extends Controller
 
                     $diff = abs($answer->answer - $position->position);
 
-                    // Aplicar las mismas mejoras que en calculateResults
                     $baseScore = pow(4 - $diff, 2);
                     $maxBaseScore = 16;
 
@@ -647,9 +663,17 @@ class TestController extends Controller
         return $resultsByCategory;
     }
 
+    private function generateShareId(): string
+    {
+        do {
+            $shareId = Str::random(8);
+        } while (TestResult::where('share_id', $shareId)->exists());
+
+        return $shareId;
+    }
+
     public function restart()
     {
-        // ✅ CORRECCIÓN: Limpiar también test_mode
         session()->forget(['test_id', 'test_questions', 'test_mode']);
         return redirect()->route('test.index');
     }

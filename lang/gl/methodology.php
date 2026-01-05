@@ -106,6 +106,16 @@ return [
     'compass_categories_intro' => 'As categorías do test agrúpanse así para calcular a túa posición:',
     'compass_economic_categories' => 'Economía, Fiscalidade, Emprego, Vivenda, Pensións',
     'compass_social_categories' => 'Inmigración, Seguridade, Educación, Sanidade, Medio ambiente, Igualdade',
+    'compass_algorithm_title' => 'Como calculamos a túa posición',
+    'compass_algorithm_intro' => 'Para garantir coherencia entre a túa afinidade cos partidos e a túa posición no compás, utilizamos un sistema de <strong>polaridade automática</strong>:',
+    'compass_algorithm_steps' => '<ol>
+    <li><strong>Análise de cada pregunta:</strong> Para cada pregunta, analizamos as posicións de partidos de referencia (esquerda: PSOE, Sumar, Bildu, ERC; dereita: PP, VOX, Aliança Catalana).</li>
+    <li><strong>Determinación de polaridade:</strong> Se os partidos de esquerda teñen posicións máis altas nunha pregunta, responder "moi de acordo" posiciónate cara á esquerda. Se son os de dereita, posiciónate cara á dereita.</li>
+    <li><strong>Cálculo do score:</strong> A túa resposta convértese a unha escala de -100 (esquerda/progresista) a +100 (dereita/conservador), axustada pola polaridade de cada pregunta.</li>
+    <li><strong>Media por eixe:</strong> A posición final en cada eixe é a media de todas as preguntas das categorías correspondentes.</li>
+</ol>',
+    'compass_algorithm_example' => 'Por exemplo, na pregunta "Os ricos deberían pagar máis impostos", os partidos de esquerda teñen posicións altas (4-5) e os de dereita baixas (1-2). Polo tanto, se respondes "moi de acordo" (5), o teu score axústase cara á esquerda, non cara á dereita.',
+    'compass_algorithm_benefit' => 'Este sistema garante que se tes alta afinidade cun partido de esquerdas, o teu compás situarate coherentemente na esquerda, e viceversa.',
     'note' => 'Nota',
     'compass_note' => 'O compás non captura todas as dimensións políticas, como o eixe territorial (centralismo vs. autonomismo), moi relevante en España.',
 

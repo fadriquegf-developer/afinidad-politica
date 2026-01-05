@@ -10,22 +10,12 @@ use Illuminate\Console\Command;
 
 class RecalculateTestResults extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'tests:recalculate 
                             {--dry-run : Simular sin guardar cambios}
                             {--limit= : Limitar número de tests a procesar}
                             {--id= : Recalcular solo un test específico por ID}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Recalcular los resultados de todos los tests completados usando el algoritmo mejorado';
+    protected $description = 'Recalcular los resultados de todos los tests completados usando el algoritmo corregido con polaridad';
 
     /**
      * Categorías económicas para la brújula política
@@ -65,8 +55,20 @@ class RecalculateTestResults extends Command
     ];
 
     /**
-     * Execute the console command.
+     * Cache para las polaridades de las preguntas
      */
+    private array $questionPolarityCache = [];
+
+    /**
+     * IDs de partidos de izquierda
+     */
+    private ?array $leftPartyIds = null;
+
+    /**
+     * IDs de partidos de derecha
+     */
+    private ?array $rightPartyIds = null;
+
     public function handle()
     {
         $dryRun = $this->option('dry-run');
@@ -78,7 +80,9 @@ class RecalculateTestResults extends Command
             $this->newLine();
         }
 
-        // Obtener tests a procesar
+        // Inicializar referencias de partidos para polaridad
+        $this->initPartyReferences();
+
         $query = TestResult::where('is_completed', true)
             ->whereNotNull('results');
 
@@ -98,21 +102,18 @@ class RecalculateTestResults extends Command
             return 1;
         }
 
-        $this->info("📊 Recalculando {$total} tests con el algoritmo mejorado...");
+        $this->info("📊 Recalculando {$total} tests con el algoritmo corregido...");
         $this->newLine();
 
-        // Cargar datos necesarios
         $parties = Party::where('is_active', true)->get();
         $categories = Category::where('is_active', true)->get()->keyBy('id');
 
-        // Estadísticas
         $stats = [
             'processed' => 0,
             'changed' => 0,
             'unchanged' => 0,
             'errors' => 0,
-            'top_party_changes' => 0,
-            'avg_difference' => [],
+            'compass_changes' => 0,
         ];
 
         $bar = $this->output->createProgressBar($total);
@@ -128,62 +129,47 @@ class RecalculateTestResults extends Command
                     continue;
                 }
 
-                // Guardar resultados antiguos para comparar
-                $oldResults = is_array($test->results)
-                    ? $test->results
-                    : json_decode($test->results, true);
-                $oldTopPartyId = $test->top_party_id;
+                // Guardar valores antiguos
+                $oldCompass = is_array($test->compass_position)
+                    ? $test->compass_position
+                    : json_decode($test->compass_position, true);
 
-                // Calcular nuevos resultados
+                // Calcular nuevos valores con polaridad corregida
                 $newResultsData = $this->calculateResults($answers, $parties);
                 $newCompassPosition = $this->calculateCompassPosition($answers);
                 $newCategoryScores = $this->calculateCategoryScores($answers, $categories);
 
-                // Comparar cambios
-                $hasChanged = false;
-                $differences = [];
+                // Detectar cambios significativos en la brújula
+                $compassChanged = false;
+                if ($oldCompass) {
+                    $economicDiff = abs(($oldCompass['economic'] ?? 0) - ($newCompassPosition['economic'] ?? 0));
+                    $socialDiff = abs(($oldCompass['social'] ?? 0) - ($newCompassPosition['social'] ?? 0));
 
-                foreach ($newResultsData['results'] as $partyId => $newScore) {
-                    $oldScore = $oldResults[$partyId] ?? 0;
-                    $diff = abs($newScore - $oldScore);
-
-                    if ($diff > 0.1) {
-                        $hasChanged = true;
-                        $differences[$partyId] = [
-                            'old' => $oldScore,
-                            'new' => $newScore,
-                            'diff' => round($newScore - $oldScore, 1),
-                        ];
-                        $stats['avg_difference'][] = $diff;
+                    // Consideramos cambio significativo si hay > 10 puntos de diferencia
+                    if ($economicDiff > 10 || $socialDiff > 10) {
+                        $compassChanged = true;
+                        $stats['compass_changes']++;
                     }
                 }
 
-                // Verificar cambio de partido top
-                $topPartyChanged = $oldTopPartyId != $newResultsData['topPartyId'];
-                if ($topPartyChanged) {
-                    $stats['top_party_changes']++;
-                }
-
-                if ($hasChanged) {
-                    $stats['changed']++;
-
-                    if (!$dryRun) {
-                        $test->update([
-                            'results' => $newResultsData['results'],
-                            'compass_position' => $newCompassPosition,
-                            'category_scores' => $newCategoryScores,
-                            'top_party_id' => $newResultsData['topPartyId'],
-                        ]);
-                    }
-                } else {
-                    $stats['unchanged']++;
+                if (!$dryRun) {
+                    $test->update([
+                        'results' => $newResultsData['results'],
+                        'compass_position' => $newCompassPosition,
+                        'category_scores' => $newCategoryScores,
+                        'top_party_id' => $newResultsData['topPartyId'],
+                    ]);
                 }
 
                 $stats['processed']++;
+                if ($compassChanged) {
+                    $stats['changed']++;
+                } else {
+                    $stats['unchanged']++;
+                }
             } catch (\Exception $e) {
                 $stats['errors']++;
-                $this->newLine();
-                $this->error("Error en test #{$test->id}: " . $e->getMessage());
+                $this->error("\nError en test {$test->id}: " . $e->getMessage());
             }
 
             $bar->advance();
@@ -193,60 +179,87 @@ class RecalculateTestResults extends Command
         $this->newLine(2);
 
         // Mostrar estadísticas
-        $this->displayStats($stats, $dryRun);
+        $this->info('📈 Estadísticas:');
+        $this->table(
+            ['Métrica', 'Valor'],
+            [
+                ['Tests procesados', $stats['processed']],
+                ['Brújulas con cambio significativo (>10pts)', $stats['compass_changes']],
+                ['Sin cambios significativos', $stats['unchanged']],
+                ['Errores', $stats['errors']],
+            ]
+        );
+
+        if ($dryRun) {
+            $this->warn("\n⚠️ MODO DRY-RUN: No se guardaron cambios. Ejecuta sin --dry-run para aplicar.");
+        } else {
+            $this->info("\n✅ Recálculo completado y guardado.");
+        }
 
         return 0;
     }
 
     /**
-     * Calcular afinidad con cada partido (algoritmo mejorado)
+     * Inicializar IDs de partidos de referencia para cálculo de polaridad.
      */
-    private function calculateResults($answers, $parties): array
+    private function initPartyReferences(): void
     {
-        $results = [];
+        $this->leftPartyIds = Party::whereIn('slug', ['psoe', 'sumar', 'bildu', 'erc'])
+            ->pluck('id')
+            ->toArray();
 
-        foreach ($parties as $party) {
-            $totalScore = 0;
-            $maxScore = 0;
+        $this->rightPartyIds = Party::whereIn('slug', ['pp', 'vox', 'alianca-catalana'])
+            ->pluck('id')
+            ->toArray();
 
-            foreach ($answers as $answer) {
-                $position = PartyPosition::where('party_id', $party->id)
-                    ->where('question_id', $answer->question_id)
-                    ->first();
-
-                if ($position) {
-                    $diff = abs($answer->answer - $position->position);
-                    $importance = $answer->importance ?? 3;
-
-                    // MEJORA 1: Escala cuadrática
-                    $baseScore = pow(4 - $diff, 2);
-                    $maxBaseScore = 16;
-
-                    // MEJORA 2: Factor de convicción
-                    $distanceFromCenter = abs($answer->answer - 3);
-                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25);
-
-                    // Peso final combinado
-                    $weight = $position->weight * $importance * $convictionFactor;
-
-                    $totalScore += $baseScore * $weight;
-                    $maxScore += $maxBaseScore * $weight;
-                }
-            }
-
-            $results[$party->id] = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
-        }
-
-        arsort($results);
-
-        return [
-            'results' => $results,
-            'topPartyId' => array_key_first($results),
-        ];
+        $this->info("Partidos de izquierda (IDs): " . implode(', ', $this->leftPartyIds));
+        $this->info("Partidos de derecha (IDs): " . implode(', ', $this->rightPartyIds));
+        $this->newLine();
     }
 
     /**
-     * Calcular posición en la brújula política
+     * Calcular la polaridad de una pregunta basándose en las posiciones de los partidos.
+     */
+    private function calculateQuestionPolarity(int $questionId): int
+    {
+        if (isset($this->questionPolarityCache[$questionId])) {
+            return $this->questionPolarityCache[$questionId];
+        }
+
+        $positions = PartyPosition::where('question_id', $questionId)->get();
+
+        if ($positions->isEmpty()) {
+            $this->questionPolarityCache[$questionId] = 1;
+            return 1;
+        }
+
+        $leftSum = 0;
+        $leftCount = 0;
+        $rightSum = 0;
+        $rightCount = 0;
+
+        foreach ($positions as $position) {
+            if (in_array($position->party_id, $this->leftPartyIds)) {
+                $leftSum += $position->position;
+                $leftCount++;
+            } elseif (in_array($position->party_id, $this->rightPartyIds)) {
+                $rightSum += $position->position;
+                $rightCount++;
+            }
+        }
+
+        $leftAvg = $leftCount > 0 ? $leftSum / $leftCount : 3;
+        $rightAvg = $rightCount > 0 ? $rightSum / $rightCount : 3;
+
+        // Si izquierda tiene posiciones más altas, la polaridad es inversa (-1)
+        $polarity = ($leftAvg > $rightAvg) ? -1 : 1;
+
+        $this->questionPolarityCache[$questionId] = $polarity;
+        return $polarity;
+    }
+
+    /**
+     * Calcular posición en la brújula política (VERSIÓN CORREGIDA)
      */
     private function calculateCompassPosition($answers): array
     {
@@ -258,10 +271,14 @@ class RecalculateTestResults extends Command
                 continue;
             }
 
+            // ✅ CORRECCIÓN: Obtener polaridad de la pregunta
+            $polarity = $this->calculateQuestionPolarity($answer->question_id);
+
             $categoryName = strtolower($answer->question->category->name);
             $categorySlug = strtolower($answer->question->category->slug ?? '');
 
-            $normalizedScore = (($answer->answer - 3) / 2) * 100;
+            // ✅ CORRECCIÓN: Aplicar polaridad al score
+            $normalizedScore = (($answer->answer - 3) / 2) * 100 * $polarity;
 
             $isEconomic = false;
             $isSocial = false;
@@ -304,6 +321,50 @@ class RecalculateTestResults extends Command
     }
 
     /**
+     * Calcular afinidad con cada partido
+     */
+    private function calculateResults($answers, $parties): array
+    {
+        $results = [];
+
+        foreach ($parties as $party) {
+            $totalScore = 0;
+            $maxScore = 0;
+
+            foreach ($answers as $answer) {
+                $position = PartyPosition::where('party_id', $party->id)
+                    ->where('question_id', $answer->question_id)
+                    ->first();
+
+                if ($position) {
+                    $diff = abs($answer->answer - $position->position);
+                    $importance = $answer->importance ?? 3;
+
+                    $baseScore = pow(4 - $diff, 2);
+                    $maxBaseScore = 16;
+
+                    $distanceFromCenter = abs($answer->answer - 3);
+                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25);
+
+                    $weight = $position->weight * $importance * $convictionFactor;
+
+                    $totalScore += $baseScore * $weight;
+                    $maxScore += $maxBaseScore * $weight;
+                }
+            }
+
+            $results[$party->id] = $maxScore > 0 ? round(($totalScore / $maxScore) * 100, 1) : 0;
+        }
+
+        arsort($results);
+
+        return [
+            'results' => $results,
+            'topPartyId' => array_key_first($results),
+        ];
+    }
+
+    /**
      * Calcular puntuaciones por categoría
      */
     private function calculateCategoryScores($answers, $categories): array
@@ -320,42 +381,5 @@ class RecalculateTestResults extends Command
         }
 
         return $scores;
-    }
-
-    /**
-     * Mostrar estadísticas finales
-     */
-    private function displayStats(array $stats, bool $dryRun): void
-    {
-        $this->info('═══════════════════════════════════════════');
-        $this->info('              RESUMEN DE RECÁLCULO          ');
-        $this->info('═══════════════════════════════════════════');
-        $this->newLine();
-
-        $this->line("  📊 Tests procesados:     <info>{$stats['processed']}</info>");
-        $this->line("  ✅ Tests modificados:    <info>{$stats['changed']}</info>");
-        $this->line("  ➖ Tests sin cambios:    <comment>{$stats['unchanged']}</comment>");
-        $this->line("  ❌ Errores:              <error>{$stats['errors']}</error>");
-        $this->newLine();
-
-        $this->line("  🔄 Cambios de partido principal: <info>{$stats['top_party_changes']}</info>");
-
-        if (count($stats['avg_difference']) > 0) {
-            $avgDiff = round(array_sum($stats['avg_difference']) / count($stats['avg_difference']), 2);
-            $maxDiff = round(max($stats['avg_difference']), 2);
-            $this->line("  📈 Diferencia media:     <info>{$avgDiff}%</info>");
-            $this->line("  📈 Diferencia máxima:    <info>{$maxDiff}%</info>");
-        }
-
-        $this->newLine();
-
-        if ($dryRun) {
-            $this->warn('⚠️  MODO DRY-RUN: No se guardaron cambios.');
-            $this->info('   Ejecuta sin --dry-run para aplicar los cambios.');
-        } else {
-            $this->info('✅ Todos los cambios han sido guardados.');
-        }
-
-        $this->newLine();
     }
 }

@@ -106,6 +106,16 @@ return [
     'compass_categories_intro' => 'Las categorías del test se agrupan así para calcular tu posición:',
     'compass_economic_categories' => 'Economía, Fiscalidad, Empleo, Vivienda, Pensiones',
     'compass_social_categories' => 'Inmigración, Seguridad, Educación, Sanidad, Medio ambiente, Igualdad',
+    'compass_algorithm_title' => 'Cómo calculamos tu posición',
+    'compass_algorithm_intro' => 'Para garantizar coherencia entre tu afinidad con los partidos y tu posición en la brújula, utilizamos un sistema de <strong>polaridad automática</strong>:',
+    'compass_algorithm_steps' => '<ol>
+    <li><strong>Análisis de cada pregunta:</strong> Para cada pregunta, analizamos las posiciones de partidos de referencia (izquierda: PSOE, Sumar, Bildu, ERC; derecha: PP, VOX, Aliança Catalana).</li>
+    <li><strong>Determinación de polaridad:</strong> Si los partidos de izquierda tienen posiciones más altas en una pregunta, responder "muy de acuerdo" te posiciona hacia la izquierda. Si son los de derecha, te posiciona hacia la derecha.</li>
+    <li><strong>Cálculo del score:</strong> Tu respuesta se convierte a una escala de -100 (izquierda/progresista) a +100 (derecha/conservador), ajustada por la polaridad de cada pregunta.</li>
+    <li><strong>Promedio por eje:</strong> La posición final en cada eje es el promedio de todas las preguntas de las categorías correspondientes.</li>
+</ol>',
+    'compass_algorithm_example' => 'Por ejemplo, en la pregunta "Los ricos deberían pagar más impuestos", los partidos de izquierda tienen posiciones altas (4-5) y los de derecha bajas (1-2). Por tanto, si respondes "muy de acuerdo" (5), tu score se ajusta hacia la izquierda, no hacia la derecha.',
+    'compass_algorithm_benefit' => 'Este sistema garantiza que si tienes alta afinidad con un partido de izquierdas, tu brújula te situará coherentemente en la izquierda, y viceversa.',
     'note' => 'Nota',
     'compass_note' => 'La brújula no captura todas las dimensiones políticas, como el eje territorial (centralismo vs. autonomismo), muy relevante en España.',
 

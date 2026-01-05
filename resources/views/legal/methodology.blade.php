@@ -173,6 +173,17 @@
                 {{ __('methodology.compass_social_categories') }}</li>
         </ul>
 
+        <h3>{{ __('methodology.compass_algorithm_title') }}</h3>
+        <p>{!! __('methodology.compass_algorithm_intro') !!}</p>
+        {!! __('methodology.compass_algorithm_steps') !!}
+
+        <div class="alert alert-secondary">
+            <i class="bi bi-lightbulb me-2"></i>
+            <strong>{{ __('methodology.example') }}:</strong> {{ __('methodology.compass_algorithm_example') }}
+        </div>
+
+        <p><strong>{{ __('methodology.compass_algorithm_benefit') }}</strong></p>
+
         <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
             <strong>{{ __('methodology.note') }}:</strong> {{ __('methodology.compass_note') }}

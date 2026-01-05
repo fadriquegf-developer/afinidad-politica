@@ -106,6 +106,16 @@ return [
     'compass_categories_intro' => 'Testeko kategoriak honela taldekatzen dira zure posizioa kalkulatzeko:',
     'compass_economic_categories' => 'Ekonomia, Fiskalitatea, Enplegua, Etxebizitza, Pentsioak',
     'compass_social_categories' => 'Immigrazioa, Segurtasuna, Hezkuntza, Osasuna, Ingurumena, Berdintasuna',
+    'compass_algorithm_title' => 'Nola kalkulatzen dugu zure posizioa',
+    'compass_algorithm_intro' => 'Alderdiekiko zure afinitatea eta ipar-orratzeko zure posizioa koherenteak izatea bermatzeko, <strong>polaritate automatiko</strong> sistema bat erabiltzen dugu:',
+    'compass_algorithm_steps' => '<ol>
+    <li><strong>Galdera bakoitzaren analisia:</strong> Galdera bakoitzerako, erreferentziazko alderdien posizioak aztertzen ditugu (ezkerra: PSOE, Sumar, Bildu, ERC; eskuina: PP, VOX, Aliança Catalana).</li>
+    <li><strong>Polaritatea zehaztea:</strong> Ezkerreko alderdiek galdera batean posizio altuagoak badituzte, "guztiz ados" erantzuteak ezkerrera kokatzen zaitu. Eskuinekoak badira, eskuinera kokatzen zaitu.</li>
+    <li><strong>Score-aren kalkulua:</strong> Zure erantzuna -100 (ezkerra/aurrerakoia) eta +100 (eskuina/kontserbadorea) arteko eskala batera bihurtzen da, galdera bakoitzaren polaritatearekin doituta.</li>
+    <li><strong>Ardatz bakoitzeko batez bestekoa:</strong> Ardatz bakoitzeko azken posizioa dagokion kategorietako galdera guztien batez bestekoa da.</li>
+</ol>',
+    'compass_algorithm_example' => 'Adibidez, "Aberatsek zerga gehiago ordaindu beharko lukete" galderan, ezkerreko alderdiek posizio altuak dituzte (4-5) eta eskuinekoek baxuak (1-2). Beraz, "guztiz ados" (5) erantzuten baduzu, zure score-a ezkerrera doitzen da, ez eskuinera.',
+    'compass_algorithm_benefit' => 'Sistema honek bermatzen du ezkerreko alderdi batekin afinitate altua baduzu, zure ipar-orratzak koherenteki ezkerrean kokatuko zaituela, eta alderantziz.',
     'note' => 'Oharra',
     'compass_note' => 'Ipar-orratzak ez ditu dimentsio politiko guztiak jasotzen, hala nola lurralde ardatza (zentralismoa vs. autonomismoa), Espainian oso garrantzitsua dena.',
 

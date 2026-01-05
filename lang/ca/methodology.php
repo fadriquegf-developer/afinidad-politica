@@ -106,6 +106,16 @@ return [
     'compass_categories_intro' => 'Les categories del test s\'agrupen així per calcular la teva posició:',
     'compass_economic_categories' => 'Economia, Fiscalitat, Ocupació, Habitatge, Pensions',
     'compass_social_categories' => 'Immigració, Seguretat, Educació, Sanitat, Medi ambient, Igualtat',
+    'compass_algorithm_title' => 'Com calculem la teva posició',
+    'compass_algorithm_intro' => 'Per garantir coherència entre la teva afinitat amb els partits i la teva posició a la brúixola, utilitzem un sistema de <strong>polaritat automàtica</strong>:',
+    'compass_algorithm_steps' => '<ol>
+    <li><strong>Anàlisi de cada pregunta:</strong> Per a cada pregunta, analitzem les posicions de partits de referència (esquerra: PSOE, Sumar, Bildu, ERC; dreta: PP, VOX, Aliança Catalana).</li>
+    <li><strong>Determinació de polaritat:</strong> Si els partits d\'esquerra tenen posicions més altes en una pregunta, respondre "molt d\'acord" et posiciona cap a l\'esquerra. Si són els de dreta, et posiciona cap a la dreta.</li>
+    <li><strong>Càlcul del score:</strong> La teva resposta es converteix a una escala de -100 (esquerra/progressista) a +100 (dreta/conservador), ajustada per la polaritat de cada pregunta.</li>
+    <li><strong>Mitjana per eix:</strong> La posició final en cada eix és la mitjana de totes les preguntes de les categories corresponents.</li>
+</ol>',
+    'compass_algorithm_example' => 'Per exemple, a la pregunta "Els rics haurien de pagar més impostos", els partits d\'esquerra tenen posicions altes (4-5) i els de dreta baixes (1-2). Per tant, si respons "molt d\'acord" (5), el teu score s\'ajusta cap a l\'esquerra, no cap a la dreta.',
+    'compass_algorithm_benefit' => 'Aquest sistema garanteix que si tens alta afinitat amb un partit d\'esquerres, la teva brúixola et situarà coherentment a l\'esquerra, i viceversa.',
     'note' => 'Nota',
     'compass_note' => 'La brúixola no captura totes les dimensions polítiques, com l\'eix territorial (centralisme vs. autonomisme), molt rellevant a Espanya.',
 
