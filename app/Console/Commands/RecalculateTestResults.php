@@ -365,7 +365,10 @@ class RecalculateTestResults extends Command
     }
 
     /**
-     * Calcular puntuaciones por categoría
+     * Calcular posición ideológica por categoría.
+     * 
+     * VERSIÓN CORREGIDA: Ahora usa polaridad para calcular valores
+     * de -100 a +100 en lugar de 0 a 100.
      */
     private function calculateCategoryScores($answers, $categories): array
     {
@@ -375,8 +378,23 @@ class RecalculateTestResults extends Command
             $catAnswers = $answers->filter(fn($a) => $a->question->category_id == $catId);
 
             if ($catAnswers->count() > 0) {
-                $avgAnswer = $catAnswers->avg('answer');
-                $scores[$catId] = round((($avgAnswer - 1) / 4) * 100);
+                $categoryScores = [];
+
+                foreach ($catAnswers as $answer) {
+                    // Obtener la polaridad de esta pregunta
+                    $polarity = $this->calculateQuestionPolarity($answer->question_id);
+
+                    // Calcular score normalizado aplicando polaridad
+                    $normalizedScore = (($answer->answer - 3) / 2) * 100 * $polarity;
+
+                    $categoryScores[] = $normalizedScore;
+                }
+
+                $avgScore = count($categoryScores) > 0
+                    ? array_sum($categoryScores) / count($categoryScores)
+                    : 0;
+
+                $scores[$catId] = round($avgScore);
             }
         }
 
