@@ -157,38 +157,147 @@
                 </div>
             </div>
 
-            {{-- Gráfico Radar por Categorías --}}
+            {{-- Posición Ideológica por Categorías --}}
             @if (!empty($categoryScores))
                 <div class="card mb-4">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">📊 {{ __('test.your_profile_by_category') }}</h5>
+                        <small class="text-muted">{{ __('test.category_profile_explanation') }}</small>
                     </div>
                     <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-lg-7">
-                                <canvas id="radarChart" height="300"></canvas>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="radar-legend mt-3 mt-lg-0">
-                                    @foreach ($categories as $catId => $category)
-                                        @if (isset($categoryScores[$catId]))
-                                            <div class="d-flex align-items-center mb-2">
+                        @php
+                            // Definir etiquetas para cada categoría (slug => [izquierda, derecha])
+                            $categoryLabels = [
+                                'modelo-territorial' => ['test.cat_label_centralist', 'test.cat_label_autonomist'],
+                                'economia-fiscalidad' => ['test.cat_label_interventionist', 'test.cat_label_liberal'],
+                                'empleo-trabajo' => ['test.cat_label_worker_rights', 'test.cat_label_business_flex'],
+                                'inmigracion' => ['test.cat_label_open_borders', 'test.cat_label_restrictive'],
+                                'medio-ambiente' => ['test.cat_label_ecologist', 'test.cat_label_productivist'],
+                                'modelo-social' => ['test.cat_label_progressive', 'test.cat_label_conservative'],
+                                'educacion-sanidad' => ['test.cat_label_public', 'test.cat_label_private'],
+                                'vivienda' => ['test.cat_label_regulate', 'test.cat_label_free_market'],
+                                'seguridad-justicia' => ['test.cat_label_garantist', 'test.cat_label_punitive'],
+                                'lengua-identidad' => ['test.cat_label_plurilingual', 'test.cat_label_monolingual'],
+                                'pensiones-bienestar' => ['test.cat_label_welfare', 'test.cat_label_individual'],
+                                'instituciones' => ['test.cat_label_republican', 'test.cat_label_monarchist'],
+                                'agricultura-rural' => ['test.cat_label_ecological', 'test.cat_label_intensive'],
+                                'europa-mundo' => ['test.cat_label_federalist', 'test.cat_label_sovereignist'],
+                            ];
+                        @endphp
+
+                        <div class="category-positions">
+                            @foreach ($categories as $catId => $category)
+                                @if (isset($categoryScores[$catId]))
+                                    @php
+                                        $score = $categoryScores[$catId]; // -100 a +100
+                                        $position = (($score + 100) / 200) * 100; // Convertir a 0-100% para la barra
+                                        $labels = $categoryLabels[$category->slug] ?? [
+                                            'test.cat_label_left',
+                                            'test.cat_label_right',
+                                        ];
+
+                                        // Determinar color según posición
+                                        if ($score < -30) {
+                                            $color = '#e74c3c'; // Rojo - Izquierda fuerte
+                                        } elseif ($score < -10) {
+                                            $color = '#e67e22'; // Naranja - Izquierda moderada
+                                        } elseif ($score <= 10) {
+                                            $color = '#95a5a6'; // Gris - Centro
+                                        } elseif ($score <= 30) {
+                                            $color = '#3498db'; // Azul claro - Derecha moderada
+                                        } else {
+                                            $color = '#2980b9'; // Azul oscuro - Derecha fuerte
+                                        }
+                                    @endphp
+
+                                    <div class="category-position-item mb-3 pb-3 border-bottom">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
                                                 <span class="me-2"
-                                                    style="font-size: 1.2rem;">{{ $category->icon }}</span>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <small>{{ $category->name }}</small>
-                                                        <small class="fw-bold">{{ $categoryScores[$catId] }}%</small>
-                                                    </div>
-                                                    <div class="progress" style="height: 6px;">
-                                                        <div class="progress-bar"
-                                                            style="width: {{ $categoryScores[$catId] }}%; background: {{ $category->color }}">
-                                                        </div>
-                                                    </div>
+                                                    style="font-size: 1.3rem;">{{ $category->icon }}</span>
+                                                <strong>{{ $category->name }}</strong>
+                                            </div>
+                                            <span class="badge"
+                                                style="background-color: {{ $color }}; color: white;">
+                                                {{ $score > 0 ? '+' : '' }}{{ $score }}
+                                            </span>
+                                        </div>
+
+                                        {{-- Barra de posición --}}
+                                        <div class="position-bar-container">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small class="text-muted"
+                                                    style="font-size: 0.7rem;">{{ __($labels[0]) }}</small>
+                                                <small class="text-muted"
+                                                    style="font-size: 0.7rem;">{{ __($labels[1]) }}</small>
+                                            </div>
+                                            <div class="position-bar"
+                                                style="position: relative; height: 12px; background: linear-gradient(to right, #e74c3c, #f39c12, #95a5a6, #3498db, #2980b9); border-radius: 6px;">
+                                                {{-- Marcador de posición --}}
+                                                <div class="position-marker"
+                                                    style="
+                                        position: absolute;
+                                        left: calc({{ $position }}% - 8px);
+                                        top: -4px;
+                                        width: 20px;
+                                        height: 20px;
+                                        background: white;
+                                        border: 3px solid {{ $color }};
+                                        border-radius: 50%;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                        transition: left 0.3s ease;
+                                    ">
+                                                </div>
+                                                {{-- Línea central --}}
+                                                <div
+                                                    style="
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 0;
+                                        width: 2px;
+                                        height: 100%;
+                                        background: rgba(255,255,255,0.5);
+                                    ">
                                                 </div>
                                             </div>
-                                        @endif
-                                    @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        {{-- Leyenda --}}
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h6 class="mb-2"><i class="bi bi-info-circle me-1"></i>{{ __('test.how_to_read') }}</h6>
+                            <div class="row small text-muted">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span
+                                            style="display: inline-block; width: 12px; height: 12px; background: #e74c3c; border-radius: 50%; margin-right: 8px;"></span>
+                                        <span>{{ __('test.strong_left') }} (-100 a -30)</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span
+                                            style="display: inline-block; width: 12px; height: 12px; background: #e67e22; border-radius: 50%; margin-right: 8px;"></span>
+                                        <span>{{ __('test.moderate_left') }} (-30 a -10)</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span
+                                            style="display: inline-block; width: 12px; height: 12px; background: #95a5a6; border-radius: 50%; margin-right: 8px;"></span>
+                                        <span>{{ __('test.center') }} (-10 a +10)</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span
+                                            style="display: inline-block; width: 12px; height: 12px; background: #3498db; border-radius: 50%; margin-right: 8px;"></span>
+                                        <span>{{ __('test.moderate_right') }} (+10 a +30)</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span
+                                            style="display: inline-block; width: 12px; height: 12px; background: #2980b9; border-radius: 50%; margin-right: 8px;"></span>
+                                        <span>{{ __('test.strong_right') }} (+30 a +100)</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -385,70 +494,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Gráfico Radar
-        @if (!empty($categoryScores))
-            const radarCtx = document.getElementById('radarChart').getContext('2d');
-            new Chart(radarCtx, {
-                type: 'radar',
-                data: {
-                    labels: [
-                        @foreach ($categories as $catId => $category)
-                            @if (isset($categoryScores[$catId]))
-                                '{{ $category->icon }} {{ Str::limit($category->name, 15) }}',
-                            @endif
-                        @endforeach
-                    ],
-                    datasets: [{
-                        label: '{{ __('test.your_position') }}',
-                        data: [
-                            @foreach ($categories as $catId => $category)
-                                @if (isset($categoryScores[$catId]))
-                                    {{ $categoryScores[$catId] }},
-                                @endif
-                            @endforeach
-                        ],
-                        backgroundColor: 'rgba(220, 53, 69, 0.2)',
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(220, 53, 69, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(220, 53, 69, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                stepSize: 25,
-                                display: false
-                            },
-                            grid: {
-                                color: '#dee2e6'
-                            },
-                            angleLines: {
-                                color: '#dee2e6'
-                            },
-                            pointLabels: {
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        @endif
-
         function copyShareUrl() {
             const input = document.getElementById('shareUrl');
             input.select();

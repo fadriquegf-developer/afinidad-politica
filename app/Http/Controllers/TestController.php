@@ -398,14 +398,34 @@ class TestController extends Controller
     private function calculateCompassPosition($answers): array
     {
         $economicCategories = [
-            'economía', 'economia', 'fiscalidad', 'empleo', 'trabajo',
-            'vivienda', 'pensiones', 'bienestar', 'agricultura', 'rural'
+            'economía',
+            'economia',
+            'fiscalidad',
+            'empleo',
+            'trabajo',
+            'vivienda',
+            'pensiones',
+            'bienestar',
+            'agricultura',
+            'rural'
         ];
 
         $socialCategories = [
-            'social', 'inmigración', 'inmigracion', 'seguridad', 'justicia',
-            'instituciones', 'monarquía', 'monarquia', 'educación', 'educacion',
-            'sanidad', 'medio ambiente', 'medioambiente', 'igualdad', 'derechos'
+            'social',
+            'inmigración',
+            'inmigracion',
+            'seguridad',
+            'justicia',
+            'instituciones',
+            'monarquía',
+            'monarquia',
+            'educación',
+            'educacion',
+            'sanidad',
+            'medio ambiente',
+            'medioambiente',
+            'igualdad',
+            'derechos'
         ];
 
         $economicScores = [];
@@ -508,29 +528,50 @@ class TestController extends Controller
     }
 
     /**
-     * Calcular puntuaciones por categoría (para el radar)
+     * Calcular posición ideológica por categoría.
      * 
-     * NOTA: Este método también debería considerar la polaridad,
-     * pero por simplicidad mantenemos el comportamiento actual.
-     * Si quieres consistencia total, aplica la misma lógica aquí.
+     * VERSIÓN CORREGIDA: Ahora usa polaridad para calcular valores
+     * de -100 a +100 en lugar de 0 a 100.
+     * 
+     * @param \Illuminate\Support\Collection $answers
+     * @param \Illuminate\Support\Collection $categories
+     * @return array
      */
-    private function calculateCategoryScores($answers): array
+    private function calculateCategoryScores($answers, $categories): array
     {
-        $categories = Category::where('is_active', true)->get()->keyBy('id');
         $scores = [];
 
         foreach ($categories as $catId => $category) {
             $catAnswers = $answers->filter(fn($a) => $a->question->category_id == $catId);
 
             if ($catAnswers->count() > 0) {
-                $avgAnswer = $catAnswers->avg('answer');
-                $scores[$catId] = round((($avgAnswer - 1) / 4) * 100);
+                $categoryScores = [];
+
+                foreach ($catAnswers as $answer) {
+                    // Obtener la polaridad de esta pregunta
+                    $polarity = $this->calculateQuestionPolarity($answer->question_id);
+
+                    // Calcular score normalizado aplicando polaridad
+                    // Respuesta 1-5 → normalizado a -100 a +100
+                    // Luego multiplicamos por polaridad para orientar correctamente
+                    $normalizedScore = (($answer->answer - 3) / 2) * 100 * $polarity;
+
+                    $categoryScores[] = $normalizedScore;
+                }
+
+                // Promedio de todos los scores de la categoría
+                $avgScore = count($categoryScores) > 0
+                    ? array_sum($categoryScores) / count($categoryScores)
+                    : 0;
+
+                // Guardamos el valor redondeado (-100 a +100)
+                $scores[$catId] = round($avgScore);
             }
         }
 
         return $scores;
     }
-
+    
     /**
      * Calcular afinidad con cada partido usando algoritmo mejorado.
      */
