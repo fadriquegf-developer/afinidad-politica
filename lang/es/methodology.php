@@ -58,19 +58,37 @@ return [
 
     // Sección 4: Algoritmo
     'algorithm_title' => 'Algoritmo de cálculo',
-    'algorithm_intro' => 'La afinidad con cada partido se calcula mediante la siguiente fórmula:',
+    'algorithm_intro' => 'La afinidad con cada partido se calcula mediante un algoritmo avanzado que tiene en cuenta tres factores:',
+    'algorithm_factors' => '<ul>
+        <li><strong>Escala cuadrática:</strong> Las grandes diferencias de opinión se penalizan más que las pequeñas</li>
+        <li><strong>Factor de convicción:</strong> Las opiniones fuertes (muy de acuerdo/muy en desacuerdo) tienen más peso que las moderadas</li>
+        <li><strong>Reducción de neutrales:</strong> Las respuestas "neutral" tienen menos impacto en el resultado final</li>
+    </ul>',
     'algorithm_per_question' => 'Para cada pregunta respondida:',
     'algorithm_difference' => 'diferencia = |tu_respuesta - posición_partido|',
-    'algorithm_score' => 'puntuación = (4 - diferencia) × peso_confianza',
+    'algorithm_score' => 'puntuación_base = (4 - diferencia)²',
+    'algorithm_conviction' => 'factor_convicción = 0.5 + (distancia_del_centro × 0.25)',
+    'algorithm_weight' => 'peso_total = peso_confianza × importancia × factor_convicción',
     'algorithm_total' => 'Afinidad total:',
     'algorithm_affinity' => 'afinidad = (suma_puntuaciones / puntuación_máxima_posible) × 100',
+
+    'conviction_title' => 'Factor de convicción',
+    'conviction_intro' => 'Tus opiniones más firmes tienen más peso en el resultado:',
+    'conviction_extreme' => 'Muy de acuerdo / Muy en desacuerdo → Factor 1.0 (máximo peso)',
+    'conviction_moderate' => 'De acuerdo / En desacuerdo → Factor 0.75',
+    'conviction_neutral' => 'Neutral → Factor 0.5 (menor peso)',
+
     'example' => 'Ejemplo',
-    'example_your_answer' => 'Tu respuesta: 4 (De acuerdo)',
-    'example_party_position' => 'Posición del partido X: 5 (Muy de acuerdo)',
-    'example_weight' => 'Peso de confianza: 3',
-    'example_difference' => 'Diferencia: |4 - 5| = 1',
-    'example_score' => 'Puntuación: (4 - 1) × 3 = 9 puntos',
-    'example_max' => 'Máximo posible: 4 × 3 = 12 puntos',
+    'example_your_answer' => 'Tu respuesta: 5 (Muy de acuerdo)',
+    'example_party_position' => 'Posición del partido X: 4 (De acuerdo)',
+    'example_weight' => 'Peso de confianza: 3, Importancia: 4',
+    'example_difference' => 'Diferencia: |5 - 4| = 1',
+    'example_base_score' => 'Puntuación base: (4 - 1)² = 9',
+    'example_conviction' => 'Factor convicción: 0.5 + (2 × 0.25) = 1.0',
+    'example_total_weight' => 'Peso total: 3 × 4 × 1.0 = 12',
+    'example_score' => 'Puntuación: 9 × 12 = 108 puntos',
+    'example_max' => 'Máximo posible: 16 × 12 = 192 puntos',
+    'example_percent' => 'Afinidad en esta pregunta: 108/192 = 56%',
 
     // Sección 5: Brújula
     'compass_title' => 'Brújula política',

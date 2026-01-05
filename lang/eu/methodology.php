@@ -58,19 +58,37 @@ return [
 
     // 4. atala: Algoritmoa
     'algorithm_title' => 'Kalkulu algoritmoa',
-    'algorithm_intro' => 'Alderdi bakoitzarekiko afinitatea formula honen bidez kalkulatzen da:',
+    'algorithm_intro' => 'Alderdi bakoitzarekiko afinitatea algoritmo aurreratu baten bidez kalkulatzen da, hiru faktore kontuan hartuz:',
+    'algorithm_factors' => '<ul>
+        <li><strong>Eskala koadratikoa:</strong> Iritzi desberdintasun handiak txikiak baino gehiago zigortzen dira</li>
+        <li><strong>Konbikzio faktorea:</strong> Iritzi sendoak (guztiz ados/guztiz desados) iritzi moderatuak baino pisu handiagoa dute</li>
+        <li><strong>Neutralen murrizketa:</strong> "Neutral" erantzunek eragin txikiagoa dute azken emaitzan</li>
+    </ul>',
     'algorithm_per_question' => 'Erantzundako galdera bakoitzeko:',
     'algorithm_difference' => 'diferentzia = |zure_erantzuna - alderdi_posizioa|',
-    'algorithm_score' => 'puntuazioa = (4 - diferentzia) × konfiantza_pisua',
+    'algorithm_score' => 'oinarrizko_puntuazioa = (4 - diferentzia)²',
+    'algorithm_conviction' => 'konbikzio_faktorea = 0.5 + (zentrotik_distantzia × 0.25)',
+    'algorithm_weight' => 'pisu_osoa = konfiantza_pisua × garrantzia × konbikzio_faktorea',
     'algorithm_total' => 'Afinitate osoa:',
     'algorithm_affinity' => 'afinitatea = (puntuazio_batura / gehienezko_puntuazio_posiblea) × 100',
+
+    'conviction_title' => 'Konbikzio faktorea',
+    'conviction_intro' => 'Zure iritzi sendoenek pisu handiagoa dute emaitzan:',
+    'conviction_extreme' => 'Erabat ados / Erabat desados → 1.0 faktorea (pisu maximoa)',
+    'conviction_moderate' => 'Ados / Desados → 0.75 faktorea',
+    'conviction_neutral' => 'Neutrala → 0.5 faktorea (pisu txikiagoa)',
+
     'example' => 'Adibidea',
-    'example_your_answer' => 'Zure erantzuna: 4 (Ados)',
-    'example_party_position' => 'X alderdiaren posizioa: 5 (Erabat ados)',
-    'example_weight' => 'Konfiantza pisua: 3',
-    'example_difference' => 'Diferentzia: |4 - 5| = 1',
-    'example_score' => 'Puntuazioa: (4 - 1) × 3 = 9 puntu',
-    'example_max' => 'Gehienezko posiblea: 4 × 3 = 12 puntu',
+    'example_your_answer' => 'Zure erantzuna: 5 (Erabat ados)',
+    'example_party_position' => 'X alderdiaren posizioa: 4 (Ados)',
+    'example_weight' => 'Konfiantza pisua: 3, Garrantzia: 4',
+    'example_difference' => 'Diferentzia: |5 - 4| = 1',
+    'example_base_score' => 'Oinarrizko puntuazioa: (4 - 1)² = 9',
+    'example_conviction' => 'Konbikzio faktorea: 0.5 + (2 × 0.25) = 1.0',
+    'example_total_weight' => 'Pisu osoa: 3 × 4 × 1.0 = 12',
+    'example_score' => 'Puntuazioa: 9 × 12 = 108 puntu',
+    'example_max' => 'Gehienezko posiblea: 16 × 12 = 192 puntu',
+    'example_percent' => 'Galdera honetako afinitatea: 108/192 = %56',
 
     // 5. atala: Ipar-orratza
     'compass_title' => 'Ipar-orratz politikoa',

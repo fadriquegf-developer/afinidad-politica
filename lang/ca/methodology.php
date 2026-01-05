@@ -58,19 +58,37 @@ return [
 
     // Secció 4: Algoritme
     'algorithm_title' => 'Algoritme de càlcul',
-    'algorithm_intro' => 'L\'afinitat amb cada partit es calcula mitjançant la següent fórmula:',
+    'algorithm_intro' => 'L\'afinitat amb cada partit es calcula mitjançant un algoritme avançat que té en compte tres factors:',
+    'algorithm_factors' => '<ul>
+        <li><strong>Escala quadràtica:</strong> Les grans diferències d\'opinió es penalitzen més que les petites</li>
+        <li><strong>Factor de convicció:</strong> Les opinions fortes (molt d\'acord/molt en desacord) tenen més pes que les moderades</li>
+        <li><strong>Reducció de neutrals:</strong> Les respostes "neutral" tenen menys impacte en el resultat final</li>
+    </ul>',
     'algorithm_per_question' => 'Per a cada pregunta resposta:',
     'algorithm_difference' => 'diferència = |la_teva_resposta - posició_partit|',
-    'algorithm_score' => 'puntuació = (4 - diferència) × pes_confiança',
+    'algorithm_score' => 'puntuació_base = (4 - diferència)²',
+    'algorithm_conviction' => 'factor_convicció = 0.5 + (distància_del_centre × 0.25)',
+    'algorithm_weight' => 'pes_total = pes_confiança × importància × factor_convicció',
     'algorithm_total' => 'Afinitat total:',
     'algorithm_affinity' => 'afinitat = (suma_puntuacions / puntuació_màxima_possible) × 100',
+
+    'conviction_title' => 'Factor de convicció',
+    'conviction_intro' => 'Les teves opinions més fermes tenen més pes en el resultat:',
+    'conviction_extreme' => 'Molt d\'acord / Molt en desacord → Factor 1.0 (màxim pes)',
+    'conviction_moderate' => 'D\'acord / En desacord → Factor 0.75',
+    'conviction_neutral' => 'Neutral → Factor 0.5 (menor pes)',
+
     'example' => 'Exemple',
-    'example_your_answer' => 'La teva resposta: 4 (D\'acord)',
-    'example_party_position' => 'Posició del partit X: 5 (Molt d\'acord)',
-    'example_weight' => 'Pes de confiança: 3',
-    'example_difference' => 'Diferència: |4 - 5| = 1',
-    'example_score' => 'Puntuació: (4 - 1) × 3 = 9 punts',
-    'example_max' => 'Màxim possible: 4 × 3 = 12 punts',
+    'example_your_answer' => 'La teva resposta: 5 (Molt d\'acord)',
+    'example_party_position' => 'Posició del partit X: 4 (D\'acord)',
+    'example_weight' => 'Pes de confiança: 3, Importància: 4',
+    'example_difference' => 'Diferència: |5 - 4| = 1',
+    'example_base_score' => 'Puntuació base: (4 - 1)² = 9',
+    'example_conviction' => 'Factor convicció: 0.5 + (2 × 0.25) = 1.0',
+    'example_total_weight' => 'Pes total: 3 × 4 × 1.0 = 12',
+    'example_score' => 'Puntuació: 9 × 12 = 108 punts',
+    'example_max' => 'Màxim possible: 16 × 12 = 192 punts',
+    'example_percent' => 'Afinitat en aquesta pregunta: 108/192 = 56%',
 
     // Secció 5: Brúixola
     'compass_title' => 'Brúixola política',

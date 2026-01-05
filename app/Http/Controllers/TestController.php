@@ -401,6 +401,14 @@ class TestController extends Controller
         return $scores;
     }
 
+    /**
+     * Calcular afinidad con cada partido usando algoritmo mejorado.
+     * 
+     * Mejoras implementadas:
+     * 1. Escala cuadrática: (4-diff)² penaliza más las grandes diferencias
+     * 2. Factor de convicción: opiniones extremas (1,5) tienen más peso que moderadas (2,4)
+     * 3. Reducción de neutrales: respuestas "3" tienen 50% menos peso
+     */
     private function calculateResults($answers): array
     {
         $parties = Party::where('is_active', true)->get();
@@ -418,10 +426,27 @@ class TestController extends Controller
                 if ($position) {
                     $diff = abs($answer->answer - $position->position);
                     $importance = $answer->importance ?? 3;
-                    $weight = $position->weight * $importance;
 
-                    $totalScore += (4 - $diff) * $weight;
-                    $maxScore += 4 * $weight;
+                    // MEJORA 1: Escala cuadrática - penaliza más las grandes diferencias
+                    // diff 0 → 16 puntos (100%), diff 1 → 9 (56%), diff 2 → 4 (25%), diff 3 → 1 (6%), diff 4 → 0
+                    $baseScore = pow(4 - $diff, 2);
+                    $maxBaseScore = 16; // (4-0)² = 16
+
+                    // MEJORA 2: Factor de convicción - opiniones fuertes pesan más
+                    // Respuesta 1 o 5 (extrema) → factor 1.0
+                    // Respuesta 2 o 4 (moderada) → factor 0.75
+                    // Respuesta 3 (neutral) → factor 0.5
+                    $distanceFromCenter = abs($answer->answer - 3); // 0, 1, o 2
+                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25); // 0.5, 0.75, o 1.0
+
+                    // MEJORA 3: Reducción de neutrales (ya incluida en convictionFactor)
+                    // Las respuestas neutrales (3) ya tienen factor 0.5
+
+                    // Peso final combinado
+                    $weight = $position->weight * $importance * $convictionFactor;
+
+                    $totalScore += $baseScore * $weight;
+                    $maxScore += $maxBaseScore * $weight;
                 }
             }
 
@@ -541,7 +566,7 @@ class TestController extends Controller
 
                 if ($position) {
                     $diff = abs($answer->answer - $position->position);
-                    $matchPercent = round((4 - $diff) / 4 * 100);
+                    $matchPercent = round(pow(4 - $diff, 2) / 16 * 100);
 
                     $questionData = [
                         'question' => $answer->question->text,
@@ -571,6 +596,9 @@ class TestController extends Controller
         return $partyMatches;
     }
 
+    /**
+     * Calcular resultados por categoría usando el mismo algoritmo mejorado.
+     */
     private function getResultsByCategory($answers, $parties, $categories): array
     {
         $resultsByCategory = [];
@@ -592,8 +620,18 @@ class TestController extends Controller
                     }
 
                     $diff = abs($answer->answer - $position->position);
-                    $resultsByCategory[$catId][$party->id]['score'] += (4 - $diff);
-                    $resultsByCategory[$catId][$party->id]['max'] += 4;
+
+                    // Aplicar las mismas mejoras que en calculateResults
+                    $baseScore = pow(4 - $diff, 2);
+                    $maxBaseScore = 16;
+
+                    $distanceFromCenter = abs($answer->answer - 3);
+                    $convictionFactor = 0.5 + ($distanceFromCenter * 0.25);
+
+                    $weight = $position->weight * ($answer->importance ?? 3) * $convictionFactor;
+
+                    $resultsByCategory[$catId][$party->id]['score'] += $baseScore * $weight;
+                    $resultsByCategory[$catId][$party->id]['max'] += $maxBaseScore * $weight;
                 }
             }
         }

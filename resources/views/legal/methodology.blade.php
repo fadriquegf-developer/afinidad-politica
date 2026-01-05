@@ -8,7 +8,7 @@
     <p class="lead mb-4">{{ __('methodology.subtitle') }}</p>
 
     <div class="methodology-content">
-        
+
         {{-- Resumen visual --}}
         <div class="row g-4 mb-5">
             <div class="col-md-3">
@@ -57,10 +57,14 @@
         <h2>2. {{ __('methodology.questions_title') }}</h2>
         <p>{{ __('methodology.questions_intro') }}</p>
         <ul>
-            <li><strong>{{ __('methodology.questions_neutrality') }}:</strong> {{ __('methodology.questions_neutrality_desc') }}</li>
-            <li><strong>{{ __('methodology.questions_clarity') }}:</strong> {{ __('methodology.questions_clarity_desc') }}</li>
-            <li><strong>{{ __('methodology.questions_relevance') }}:</strong> {{ __('methodology.questions_relevance_desc') }}</li>
-            <li><strong>{{ __('methodology.questions_differentiation') }}:</strong> {{ __('methodology.questions_differentiation_desc') }}</li>
+            <li><strong>{{ __('methodology.questions_neutrality') }}:</strong>
+                {{ __('methodology.questions_neutrality_desc') }}</li>
+            <li><strong>{{ __('methodology.questions_clarity') }}:</strong> {{ __('methodology.questions_clarity_desc') }}
+            </li>
+            <li><strong>{{ __('methodology.questions_relevance') }}:</strong>
+                {{ __('methodology.questions_relevance_desc') }}</li>
+            <li><strong>{{ __('methodology.questions_differentiation') }}:</strong>
+                {{ __('methodology.questions_differentiation_desc') }}</li>
         </ul>
 
         <h3>{{ __('methodology.scale_title') }}</h3>
@@ -98,35 +102,52 @@
 
         <h2>4. {{ __('methodology.algorithm_title') }}</h2>
         <p>{{ __('methodology.algorithm_intro') }}</p>
-        
+
+        {!! __('methodology.algorithm_factors') !!}
+
         <div class="bg-light p-4 rounded-3 mb-4">
             <p class="mb-2"><strong>{{ __('methodology.algorithm_per_question') }}</strong></p>
             <code>{{ __('methodology.algorithm_difference') }}</code><br>
-            <code>{{ __('methodology.algorithm_score') }}</code>
-            
+            <code>{{ __('methodology.algorithm_score') }}</code><br>
+            <code>{{ __('methodology.algorithm_conviction') }}</code><br>
+            <code>{{ __('methodology.algorithm_weight') }}</code>
+
             <p class="mt-3 mb-2"><strong>{{ __('methodology.algorithm_total') }}</strong></p>
             <code>{{ __('methodology.algorithm_affinity') }}</code>
         </div>
 
-        <p><strong>{{ __('methodology.example') }}:</strong></p>
+        <h3>{{ __('methodology.conviction_title') }}</h3>
+        <p>{{ __('methodology.conviction_intro') }}</p>
+        <ul>
+            <li><strong>{{ __('methodology.conviction_extreme') }}</strong></li>
+            <li><strong>{{ __('methodology.conviction_moderate') }}</strong></li>
+            <li><strong>{{ __('methodology.conviction_neutral') }}</strong></li>
+        </ul>
+
+        <p class="mt-4"><strong>{{ __('methodology.example') }}:</strong></p>
         <ul>
             <li>{{ __('methodology.example_your_answer') }}</li>
             <li>{{ __('methodology.example_party_position') }}</li>
             <li>{{ __('methodology.example_weight') }}</li>
             <li>{{ __('methodology.example_difference') }}</li>
+            <li>{{ __('methodology.example_base_score') }}</li>
+            <li>{{ __('methodology.example_conviction') }}</li>
+            <li>{{ __('methodology.example_total_weight') }}</li>
             <li>{{ __('methodology.example_score') }}</li>
             <li>{{ __('methodology.example_max') }}</li>
+            <li><strong>{{ __('methodology.example_percent') }}</strong></li>
         </ul>
 
         <h2>5. {{ __('methodology.compass_title') }}</h2>
         <p>{{ __('methodology.compass_intro') }}</p>
-        
+
         <div class="row g-4 mb-4">
             <div class="col-md-6">
                 <div class="p-3 rounded-3 border h-100">
                     <h5>↔️ {{ __('methodology.compass_economic_axis') }}</h5>
                     <p class="mb-0">
-                        <strong>{{ __('methodology.compass_left') }}:</strong> {{ __('methodology.compass_left_desc') }}<br>
+                        <strong>{{ __('methodology.compass_left') }}:</strong>
+                        {{ __('methodology.compass_left_desc') }}<br>
                         <strong>{{ __('methodology.compass_right') }}:</strong> {{ __('methodology.compass_right_desc') }}
                     </p>
                 </div>
@@ -135,8 +156,10 @@
                 <div class="p-3 rounded-3 border h-100">
                     <h5>↕️ {{ __('methodology.compass_social_axis') }}</h5>
                     <p class="mb-0">
-                        <strong>{{ __('methodology.compass_progressive') }}:</strong> {{ __('methodology.compass_progressive_desc') }}<br>
-                        <strong>{{ __('methodology.compass_conservative') }}:</strong> {{ __('methodology.compass_conservative_desc') }}
+                        <strong>{{ __('methodology.compass_progressive') }}:</strong>
+                        {{ __('methodology.compass_progressive_desc') }}<br>
+                        <strong>{{ __('methodology.compass_conservative') }}:</strong>
+                        {{ __('methodology.compass_conservative_desc') }}
                     </p>
                 </div>
             </div>
@@ -144,8 +167,10 @@
 
         <p>{{ __('methodology.compass_categories_intro') }}</p>
         <ul>
-            <li><strong>{{ __('methodology.compass_economic_axis') }}:</strong> {{ __('methodology.compass_economic_categories') }}</li>
-            <li><strong>{{ __('methodology.compass_social_axis') }}:</strong> {{ __('methodology.compass_social_categories') }}</li>
+            <li><strong>{{ __('methodology.compass_economic_axis') }}:</strong>
+                {{ __('methodology.compass_economic_categories') }}</li>
+            <li><strong>{{ __('methodology.compass_social_axis') }}:</strong>
+                {{ __('methodology.compass_social_categories') }}</li>
         </ul>
 
         <div class="alert alert-info">
@@ -172,34 +197,38 @@
         </ul>
 
         <h2>8. {{ __('methodology.contact_title') }}</h2>
-        <p>{!! __('methodology.contact_desc', ['email' => '<a href="mailto:contacto@afinidadpolitica.es">contacto@afinidadpolitica.es</a>']) !!}</p>
+        <p>{!! __('methodology.contact_desc', [
+            'email' => '<a href="mailto:contacto@afinidadpolitica.es">contacto@afinidadpolitica.es</a>',
+        ]) !!}</p>
         <p>{{ __('methodology.contact_sources') }}</p>
     </div>
 @endsection
 
 @push('styles')
-<style>
-    .methodology-content h2 {
-        font-size: 1.3rem;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        color: #333;
-        border-bottom: 2px solid #667eea;
-        padding-bottom: 0.5rem;
-    }
-    .methodology-content h3 {
-        font-size: 1.1rem;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        color: #555;
-    }
-    .methodology-content code {
-        background: #fff;
-        padding: 4px 8px;
-        border-radius: 4px;
-        color: #e83e8c;
-        display: inline-block;
-        margin: 2px 0;
-    }
-</style>
+    <style>
+        .methodology-content h2 {
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .methodology-content h3 {
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #555;
+        }
+
+        .methodology-content code {
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #e83e8c;
+            display: inline-block;
+            margin: 2px 0;
+        }
+    </style>
 @endpush
