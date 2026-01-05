@@ -23,8 +23,8 @@ return [
 
     // 4. galdera: Alderdiak
     'q4_title' => 'Zein alderdi politiko barne hartzen ditu testak?',
-    'q4_answer' => 'Testak Espainian ordezkaritza parlamentarioa duten <strong>9 alderdi nagusiak</strong> aztertzen ditu: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu eta Aliança Catalana.',
-    'q4_schema' => 'Testak Espainian ordezkaritza parlamentarioa duten 9 alderdi nagusiak aztertzen ditu: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu eta Aliança Catalana.',
+    'q4_answer' => 'Testak Espainian ordezkaritza parlamentarioa duten <strong>10 alderdi nagusiak</strong> aztertzen ditu: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu, Aliança Catalana eta Se Acabó La Fiesta (SALF).',
+    'q4_schema' => 'Testak Espainian ordezkaritza parlamentarioa duten 10 alderdi nagusiak aztertzen ditu: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu, Aliança Catalana eta Se Acabó La Fiesta (SALF).',
 
     // 5. galdera: Hizkuntzak
     'q5_title' => 'Testa katalanez, euskaraz edo galegoz egin dezaket?',

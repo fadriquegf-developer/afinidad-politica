@@ -23,8 +23,8 @@ return [
 
     // Pregunta 4: Partits inclosos
     'q4_title' => 'Quins partits polítics inclou el test?',
-    'q4_answer' => 'El test analitza els <strong>9 principals partits</strong> amb representació parlamentària a Espanya: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu i Aliança Catalana.',
-    'q4_schema' => 'El test analitza els 9 principals partits amb representació parlamentària a Espanya: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu i Aliança Catalana.',
+    'q4_answer' => 'El test analitza els <strong>10 principals partits</strong> amb representació parlamentària a Espanya: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu, Aliança Catalana i Se Acabó La Fiesta (SALF).',
+    'q4_schema' => 'El test analitza els 10 principals partits amb representació parlamentària a Espanya: PSOE, PP, VOX, Sumar, Esquerra Republicana (ERC), Junts per Catalunya, PNV, EH Bildu, Aliança Catalana i Se Acabó La Fiesta (SALF).',
 
     // Pregunta 5: Idiomes
     'q5_title' => 'Puc fer el test en català, euskera o gallec?',
